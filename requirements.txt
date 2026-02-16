@@ -1,0 +1,33 @@
+# Core inference engine
+vllm>=0.8.0
+torch>=2.5.0
+transformers>=4.45.0
+huggingface-hub>=0.25.0
+
+# Configuration
+pyyaml>=6.0
+click>=8.1.0
+
+# Profiling
+tensorboard>=2.18.0
+
+# Analysis and visualization
+pandas>=2.2.0
+numpy>=1.26.0
+matplotlib>=3.9.0
+seaborn>=0.13.0
+scipy>=1.14.0
+
+# ML predictor (lightweight, CPU-based)
+scikit-learn>=1.5.0
+joblib>=1.4.0
+
+# Utilities
+psutil>=5.9.0
+tqdm>=4.66.0
+tabulate>=0.9.0
+rich>=13.7.0
+
+# HTTP client for benchmarking
+aiohttp>=3.10.0
+requests>=2.32.0

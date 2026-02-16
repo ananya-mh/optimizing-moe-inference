@@ -1,0 +1,52 @@
+# Single-GPU Experiment Configuration
+experiment:
+  name: "single_gpu_baseline"
+  description: "Single-GPU MoE inference baseline across model sizes"
+  models: [qwen_moe_a2.7b, olmoe_1b_7b, mixtral_8x7b]
+
+  server:
+    tensor_parallel_size: 1
+    max_model_len: 4096
+    gpu_memory_utilization: 0.90
+    enforce_eager: false
+    dtype: "auto"
+    enable_chunked_prefill: true
+
+  placement_strategies:
+    - name: "baseline_no_ep"
+      tensor_parallel_size: 1
+      enable_expert_parallel: false
+      description: "All experts co-located on single GPU"
+
+  workloads:
+    - name: "short_prompt"
+      num_prompts: 500
+      input_len: 128
+      output_len: 128
+    - name: "medium_prompt"
+      num_prompts: 200
+      input_len: 512
+      output_len: 256
+    - name: "long_prompt"
+      num_prompts: 100
+      input_len: 2048
+      output_len: 512
+
+  concurrency_levels: [1, 2, 4, 8, 16, 32, 64]
+
+  metrics:
+    - throughput_tokens_per_sec
+    - time_to_first_token_ms
+    - inter_token_latency_ms
+    - e2e_latency_ms
+    - gpu_memory_used_gb
+    - gpu_utilization_pct
+
+  profiling:
+    enabled: false
+    torch_profiler: true
+    rocm_profiler: false
+    trace_dir: "results/profiles/single_gpu"
+    wait_steps: 2
+    warmup_steps: 2
+    active_steps: 5

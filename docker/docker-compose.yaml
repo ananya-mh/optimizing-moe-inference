@@ -1,0 +1,79 @@
+# Docker Compose for MoE inference optimization experiments
+# Usage:
+#   AMD single-GPU:  docker compose -f docker/docker-compose.yaml --profile amd up moe-bench-amd-single
+#   NVIDIA single:   docker compose -f docker/docker-compose.yaml --profile nvidia up moe-bench-nvidia-single
+
+services:
+  moe-bench-amd-single:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.rocm
+    profiles: ["amd"]
+    volumes:
+      - ${MODEL_DIR:-./models}:/models:ro
+      - ${RESULTS_DIR:-./results}:/workspace/moe-opt/results
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - HF_HOME=/models/huggingface
+      - VLLM_ROCM_USE_AITER=1
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    group_add:
+      - video
+    ipc: host
+    command: >
+      python -m benchmark.runner
+        --model ${MODEL:-mixtral_8x7b}
+        --experiment single_gpu
+        --num-gpus 1
+
+  moe-bench-amd-multi:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.rocm
+    profiles: ["amd"]
+    volumes:
+      - ${MODEL_DIR:-./models}:/models:ro
+      - ${RESULTS_DIR:-./results}:/workspace/moe-opt/results
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - HF_HOME=/models/huggingface
+      - VLLM_ROCM_USE_AITER=1
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    group_add:
+      - video
+    ipc: host
+    command: >
+      python -m benchmark.runner
+        --model ${MODEL:-mixtral_8x7b}
+        --experiment multi_gpu
+        --num-gpus ${NUM_GPUS:-8}
+
+  moe-bench-nvidia-single:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.cuda
+    profiles: ["nvidia"]
+    volumes:
+      - ${MODEL_DIR:-/models}:/models:ro
+      - ${RESULTS_DIR:-./results}:/workspace/moe-opt/results
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - HF_HOME=/models/huggingface
+      - NVIDIA_VISIBLE_DEVICES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: ${NUM_GPUS:-1}
+              capabilities: [gpu]
+    ipc: host
+    command: >
+      python -m benchmark.runner
+        --model ${MODEL:-mixtral_8x7b}
+        --experiment single_gpu
+        --num-gpus 1

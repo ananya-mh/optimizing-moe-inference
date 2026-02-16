@@ -1,0 +1,81 @@
+# MoE Model Registry - Six models spanning small to very large
+# For systematic evaluation of expert placement and batching strategies.
+
+models:
+  qwen_moe_a2.7b:
+    hf_model_id: "Qwen/Qwen1.5-MoE-A2.7B"
+    total_params_b: 14.3
+    active_params_b: 2.7
+    num_experts: 60
+    top_k: 4
+    num_shared_experts: 4
+    architecture: "qwen2_moe"
+    dtype: "bfloat16"
+    min_gpus: 1
+    notes: "Smallest MoE; good baseline for single-GPU placement studies"
+
+  olmoe_1b_7b:
+    hf_model_id: "allenai/OLMoE-1B-7B-0924"
+    total_params_b: 6.9
+    active_params_b: 1.3
+    num_experts: 64
+    top_k: 8
+    num_shared_experts: 0
+    architecture: "olmoe"
+    dtype: "bfloat16"
+    min_gpus: 1
+    notes: "High expert count (64) with 8 active; interesting routing patterns"
+
+  mixtral_8x7b:
+    hf_model_id: "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    total_params_b: 46.7
+    active_params_b: 12.9
+    num_experts: 8
+    top_k: 2
+    num_shared_experts: 0
+    architecture: "mixtral"
+    dtype: "bfloat16"
+    min_gpus: 1
+    notes: "Most widely deployed MoE; canonical baseline"
+
+  qwen2_57b_a14b:
+    hf_model_id: "Qwen/Qwen2-57B-A14B-Instruct"
+    total_params_b: 57.4
+    active_params_b: 14.0
+    num_experts: 64
+    top_k: 8
+    num_shared_experts: 0
+    architecture: "qwen2_moe"
+    dtype: "bfloat16"
+    min_gpus: 1
+    notes: "Large expert count with high activation ratio"
+
+  dbrx:
+    hf_model_id: "databricks/dbrx-instruct"
+    total_params_b: 132.0
+    active_params_b: 36.0
+    num_experts: 16
+    top_k: 4
+    num_shared_experts: 0
+    architecture: "dbrx"
+    dtype: "bfloat16"
+    min_gpus: 2
+    notes: "Fine-grained experts (16 total, 4 active)"
+
+  deepseek_v3:
+    hf_model_id: "deepseek-ai/DeepSeek-V3"
+    total_params_b: 671.0
+    active_params_b: 37.0
+    num_experts: 256
+    top_k: 8
+    num_shared_experts: 1
+    architecture: "deepseek_v3"
+    dtype: "bfloat16"
+    min_gpus: 8
+    notes: "Largest MoE; multi-node required. Uses MLA."
+
+experiment_groups:
+  single_gpu: [qwen_moe_a2.7b, olmoe_1b_7b, mixtral_8x7b]
+  multi_gpu: [mixtral_8x7b, qwen2_57b_a14b, dbrx]
+  multi_node: [dbrx, deepseek_v3]
+  all: [qwen_moe_a2.7b, olmoe_1b_7b, mixtral_8x7b, qwen2_57b_a14b, dbrx, deepseek_v3]

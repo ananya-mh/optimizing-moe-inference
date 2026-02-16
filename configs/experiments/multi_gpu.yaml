@@ -1,0 +1,77 @@
+# Multi-GPU Experiment Configuration
+experiment:
+  name: "multi_gpu_scaling"
+  description: "Multi-GPU expert placement and parallelism scaling study"
+  models: [mixtral_8x7b, qwen2_57b_a14b, dbrx]
+
+  gpu_configs:
+    - num_gpus: 2
+    - num_gpus: 4
+    - num_gpus: 8
+
+  placement_strategies:
+    - name: "tp_only"
+      enable_expert_parallel: false
+      data_parallel_size: 1
+      description: "Standard TP: expert weights sharded across TP ranks"
+    - name: "ep_only"
+      enable_expert_parallel: true
+      tensor_parallel_size: 1
+      all2all_backend: "allgather_reducescatter"
+      description: "Pure EP: experts distributed, attention replicated"
+    - name: "tp_ep_hybrid"
+      enable_expert_parallel: true
+      tensor_parallel_size: 2
+      all2all_backend: "allgather_reducescatter"
+      description: "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    - name: "dp_ep"
+      enable_expert_parallel: true
+      tensor_parallel_size: 1
+      all2all_backend: "allgather_reducescatter"
+      description: "DP+EP: maximize throughput via data parallelism"
+
+  all2all_backends:
+    - "allgather_reducescatter"
+    - "pplx"
+
+  workloads:
+    - name: "decode_heavy"
+      num_prompts: 500
+      input_len: 128
+      output_len: 256
+    - name: "prefill_heavy"
+      num_prompts: 200
+      input_len: 2048
+      output_len: 128
+    - name: "balanced"
+      num_prompts: 300
+      input_len: 512
+      output_len: 256
+
+  concurrency_levels: [1, 4, 8, 16, 32, 64, 128]
+
+  amd_env:
+    VLLM_ROCM_USE_AITER: "1"
+    VLLM_ROCM_USE_AITER_MOE: "1"
+    HIP_FORCE_DEV_KERNARG: "1"
+    TORCH_BLAS_PREFER_HIPBLASLT: "1"
+    NCCL_MIN_NCHANNELS: "112"
+
+  nvidia_env:
+    NCCL_MIN_NCHANNELS: "112"
+
+  metrics:
+    - throughput_tokens_per_sec
+    - time_to_first_token_ms
+    - inter_token_latency_ms
+    - e2e_latency_ms
+    - gpu_memory_used_gb
+    - gpu_utilization_pct
+    - all2all_time_ms
+    - expert_load_balance_score
+
+  profiling:
+    enabled: false
+    torch_profiler: true
+    rocm_profiler: false
+    trace_dir: "results/profiles/multi_gpu"

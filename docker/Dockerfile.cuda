@@ -1,0 +1,27 @@
+# CUDA-based Docker image for MoE inference optimization on NVIDIA GPUs
+# Build: docker build -f docker/Dockerfile.cuda -t moe-opt:cuda .
+ARG BASE_IMAGE=vllm/vllm-openai:latest
+FROM ${BASE_IMAGE}
+
+LABEL maintainer="optimizing-moe-inference"
+LABEL description="MoE inference optimization framework - NVIDIA CUDA"
+
+USER root
+
+WORKDIR /workspace/moe-opt
+
+# Copy project files
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+RUN pip install --no-cache-dir -e .
+
+# NVIDIA-specific env
+ENV NCCL_MIN_NCHANNELS=112
+
+# HF cache directory (mount at runtime)
+ENV HF_HOME=/models/huggingface
+ENV HF_TOKEN=""
+
+ENTRYPOINT ["/bin/bash"]
