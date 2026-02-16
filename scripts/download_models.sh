@@ -3,9 +3,10 @@
 #
 # Usage:
 #   export HF_TOKEN=your_token_here
+#   export MODEL_DIR=/path/to/models   # optional, default: ./models
 #   bash scripts/download_models.sh [group]
 #
-# Groups: single_gpu, multi_gpu, multi_node, all (default: single_gpu)
+# Groups: single_gpu, multi_gpu, multi_node, diffusion_llm, all
 set -euo pipefail
 
 MODEL_DIR="${MODEL_DIR:-./models}"
@@ -23,6 +24,8 @@ echo "Group: ${GROUP}"
 echo ""
 
 declare -A MODELS
+MODELS[llada_moe_7b]="inclusionAI/LLaDA-MoE-7B-A1B-Instruct"
+MODELS[llada_8b]="GSAI-ML/LLaDA-8B-Instruct"
 MODELS[qwen_moe_a2.7b]="Qwen/Qwen1.5-MoE-A2.7B"
 MODELS[olmoe_1b_7b]="allenai/OLMoE-1B-7B-0924"
 MODELS[mixtral_8x7b]="mistralai/Mixtral-8x7B-Instruct-v0.1"
@@ -30,10 +33,9 @@ MODELS[qwen2_57b_a14b]="Qwen/Qwen2-57B-A14B-Instruct"
 MODELS[dbrx]="databricks/dbrx-instruct"
 MODELS[deepseek_v3]="deepseek-ai/DeepSeek-V3"
 
-# Select models by group
 case "${GROUP}" in
     single_gpu)
-        SELECTED=(qwen_moe_a2.7b olmoe_1b_7b mixtral_8x7b)
+        SELECTED=(llada_moe_7b qwen_moe_a2.7b olmoe_1b_7b mixtral_8x7b llada_8b)
         ;;
     multi_gpu)
         SELECTED=(mixtral_8x7b qwen2_57b_a14b dbrx)
@@ -41,12 +43,14 @@ case "${GROUP}" in
     multi_node)
         SELECTED=(dbrx deepseek_v3)
         ;;
+    diffusion_llm)
+        SELECTED=(llada_moe_7b llada_8b)
+        ;;
     all)
-        SELECTED=(qwen_moe_a2.7b olmoe_1b_7b mixtral_8x7b qwen2_57b_a14b dbrx deepseek_v3)
+        SELECTED=(llada_moe_7b llada_8b qwen_moe_a2.7b olmoe_1b_7b mixtral_8x7b qwen2_57b_a14b dbrx deepseek_v3)
         ;;
     *)
-        echo "Unknown group: ${GROUP}"
-        echo "Available: single_gpu, multi_gpu, multi_node, all"
+        echo "Unknown group: ${GROUP}. Available: single_gpu, multi_gpu, multi_node, diffusion_llm, all"
         exit 1
         ;;
 esac

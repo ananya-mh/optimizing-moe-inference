@@ -1,7 +1,25 @@
-# MoE Model Registry - Six models spanning small to very large
-# For systematic evaluation of expert placement and batching strategies.
+# MoE Model Registry
+# Models spanning small to very large for systematic evaluation of
+# expert placement and batching strategies.
+#
+# Includes both autoregressive MoE models and diffusion LLM MoE models.
 
 models:
+  # --- Tier 1: Small (single-GPU feasible) ---
+
+  llada_moe_7b:
+    hf_model_id: "inclusionAI/LLaDA-MoE-7B-A1B-Instruct"
+    total_params_b: 7.0
+    active_params_b: 1.4
+    num_experts: 8
+    top_k: 2
+    num_shared_experts: 0
+    architecture: "llada_moe"
+    dtype: "bfloat16"
+    min_gpus: 1
+    is_diffusion_llm: true
+    notes: "First open-source MoE diffusion LLM. Uses masked diffusion, not autoregressive."
+
   qwen_moe_a2.7b:
     hf_model_id: "Qwen/Qwen1.5-MoE-A2.7B"
     total_params_b: 14.3
@@ -12,7 +30,8 @@ models:
     architecture: "qwen2_moe"
     dtype: "bfloat16"
     min_gpus: 1
-    notes: "Smallest MoE; good baseline for single-GPU placement studies"
+    is_diffusion_llm: false
+    notes: "Smallest autoregressive MoE; good baseline for single-GPU studies"
 
   olmoe_1b_7b:
     hf_model_id: "allenai/OLMoE-1B-7B-0924"
@@ -24,7 +43,10 @@ models:
     architecture: "olmoe"
     dtype: "bfloat16"
     min_gpus: 1
+    is_diffusion_llm: false
     notes: "High expert count (64) with 8 active; interesting routing patterns"
+
+  # --- Tier 2: Medium (single or multi-GPU) ---
 
   mixtral_8x7b:
     hf_model_id: "mistralai/Mixtral-8x7B-Instruct-v0.1"
@@ -36,7 +58,10 @@ models:
     architecture: "mixtral"
     dtype: "bfloat16"
     min_gpus: 1
+    is_diffusion_llm: false
     notes: "Most widely deployed MoE; canonical baseline"
+
+  # --- Tier 3: Large (multi-GPU) ---
 
   qwen2_57b_a14b:
     hf_model_id: "Qwen/Qwen2-57B-A14B-Instruct"
@@ -48,6 +73,7 @@ models:
     architecture: "qwen2_moe"
     dtype: "bfloat16"
     min_gpus: 1
+    is_diffusion_llm: false
     notes: "Large expert count with high activation ratio"
 
   dbrx:
@@ -60,7 +86,10 @@ models:
     architecture: "dbrx"
     dtype: "bfloat16"
     min_gpus: 2
+    is_diffusion_llm: false
     notes: "Fine-grained experts (16 total, 4 active)"
+
+  # --- Tier 4: Very Large (multi-GPU, multi-node) ---
 
   deepseek_v3:
     hf_model_id: "deepseek-ai/DeepSeek-V3"
@@ -72,10 +101,27 @@ models:
     architecture: "deepseek_v3"
     dtype: "bfloat16"
     min_gpus: 8
+    is_diffusion_llm: false
     notes: "Largest MoE; multi-node required. Uses MLA."
 
+  # --- Comparison: Dense diffusion LLM (non-MoE baseline) ---
+
+  llada_8b:
+    hf_model_id: "GSAI-ML/LLaDA-8B-Instruct"
+    total_params_b: 8.0
+    active_params_b: 8.0
+    num_experts: 1
+    top_k: 1
+    num_shared_experts: 0
+    architecture: "llada"
+    dtype: "bfloat16"
+    min_gpus: 1
+    is_diffusion_llm: true
+    notes: "Dense diffusion LLM (non-MoE baseline). Compare with LLaDA-MoE-7B."
+
 experiment_groups:
-  single_gpu: [qwen_moe_a2.7b, olmoe_1b_7b, mixtral_8x7b]
+  single_gpu: [llada_moe_7b, qwen_moe_a2.7b, olmoe_1b_7b, mixtral_8x7b, llada_8b]
   multi_gpu: [mixtral_8x7b, qwen2_57b_a14b, dbrx]
   multi_node: [dbrx, deepseek_v3]
-  all: [qwen_moe_a2.7b, olmoe_1b_7b, mixtral_8x7b, qwen2_57b_a14b, dbrx, deepseek_v3]
+  diffusion_llm: [llada_moe_7b, llada_8b]
+  all: [llada_moe_7b, qwen_moe_a2.7b, olmoe_1b_7b, mixtral_8x7b, qwen2_57b_a14b, dbrx, deepseek_v3, llada_8b]

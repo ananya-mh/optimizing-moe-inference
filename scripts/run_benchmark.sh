@@ -7,7 +7,7 @@
 #   bash scripts/run_benchmark.sh --model mixtral_8x7b --experiment single_gpu --profile
 #
 # Environment:
-#   MODEL_DIR   - Path to model weights (default: /shared_inference/models)
+#   MODEL_DIR   - Path to model weights (default: ./models)
 #   HF_TOKEN    - HuggingFace token (required for gated models)
 #   RESULTS_DIR - Path to save results (default: ./results)
 set -euo pipefail
