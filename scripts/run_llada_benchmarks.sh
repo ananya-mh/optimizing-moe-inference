@@ -2,8 +2,8 @@
 # Run LLaDA benchmarks on AMD MI300X cluster
 #
 # Usage:
-#   1. Allocate a compute node:
-#      srun --partition=amd-rccl --nodes=1 --ntasks=1 \
+#   1. Allocate a compute node with MI300X GPUs (Slurm example):
+#      srun --partition=$PARTITION --nodes=1 --ntasks=1 \
 #        --cpus-per-task=32 --gres=gpu:mi300x:8 \
 #        --time=04:00:00 --job-name=llada-bench bash
 #
@@ -16,15 +16,14 @@
 
 set -euo pipefail
 
-MODEL_DIR="/shared_inference/ravgupta_models"
-RESULTS_DIR="${MODEL_DIR}/results"
+MODEL_DIR="${MODEL_DIR:-./models}"
+RESULTS_DIR="${RESULTS_DIR:-${MODEL_DIR}/results}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/src/inference"
 
-# Use the cluster ROCm PyTorch image (pre-installed)
-ROCM_IMAGE="rocm/pytorch:rocm6.3.1_ubuntu22.04_py3.10_pytorch_release_2.4.0"
-
-# Alternatively, use the vLLM image that already has everything:
-VLLM_IMAGE="rocm/pytorch-private:miali_vllm_0.14.0rc2_ucx_develop_rixl_develop_20260126_retemadi_added_profile_pr18827"
+# ROCm PyTorch image — use any image with ROCm + PyTorch >= 2.3
+# Build from docker/Dockerfile.llada for a pre-configured image:
+#   docker build -f docker/Dockerfile.llada -t llada-rocm:latest .
+ROCM_IMAGE="${ROCM_IMAGE:-rocm/pytorch:rocm6.3.1_ubuntu22.04_py3.10_pytorch_release_2.4.0}"
 
 DOCKER_BASE_ARGS=(
     --rm

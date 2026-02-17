@@ -1,11 +1,9 @@
 # Report 1: MoE Inference Benchmark Results on AMD MI300X
 
 **Date**: February 17, 2026  
-**Author**: Ravi Gupta  
-**Cluster**: AMD OCSRI Cluster (useocpslog-002.amd.com)  
 **Hardware**: AMD Instinct MI300X (192 GB HBM3 per GPU), 8 GPUs per node, CX-7 RDMA  
-**Framework**: vLLM 0.14.0rc2 (AMD ROCm build with AITER, UCX, RIXL optimizations)  
-**Software Stack**: ROCm 7.0.51831, PyTorch 2.9.0a0, NCCL 2.27.3  
+**Framework**: vLLM 0.14.0rc2 (AMD ROCm build with AITER optimizations)  
+**Software Stack**: ROCm 7.0, PyTorch 2.9.0a0, RCCL 2.27.3  
 
 ---
 
@@ -19,16 +17,15 @@
 | RAM | 2 TB DDR5 |
 | Interconnect | CX-7 RDMA (inter-node), Infinity Fabric (intra-node) |
 | OS | Ubuntu 22.04, kernel 5.15.0-1074-oracle |
-| ROCm | 7.0.51831-a3e329ad8 |
-| PyTorch | 2.9.0a0+gitb425573 |
-| vLLM | 0.14.0rc2.dev350+g9ef3b718d |
-| Docker Image | `rocm/pytorch-private:miali_vllm_0.14.0rc2_ucx_develop_rixl_develop_20260126_retemadi_added_profile_pr18827` |
-| Job Scheduler | Slurm |
+| ROCm | >= 7.0 |
+| PyTorch | >= 2.9.0a0 |
+| vLLM | >= 0.14.0rc2 |
+| Docker Image | Any ROCm vLLM image with AITER support (see `docker/Dockerfile.rocm`) |
+| Job Scheduler | Slurm (or any GPU scheduler) |
 
-### Partition Info
-- **Partition**: `amd-rccl`
-- **Available Nodes**: ~55 idle nodes with 8x MI300X each
-- **Allocation**: `srun --partition=amd-rccl --gres=gpu:mi300x:8`
+### Cluster Setup
+- Nodes with 8x MI300X GPUs each
+- Allocation example: `srun --partition=$PARTITION --gres=gpu:mi300x:8`
 
 ---
 
@@ -46,8 +43,8 @@
 | DeepSeek-V3 | deepseek-ai/DeepSeek-V3 | 671.0B | 37.0B | 256 | 8 | Autoregressive MoE | Available at cluster |
 
 ### Model Storage
-- **Shared Path**: `/shared_inference/ravgupta_models/`
-- **DeepSeek-V3**: `/shared_inference/models_blog/DeepSeek-V3`
+- **Model Directory**: Set via `$MODEL_DIR` environment variable (default: `./models`)
+- **DeepSeek-V3**: Pre-downloaded or via `huggingface-cli download deepseek-ai/DeepSeek-V3`
 
 ---
 
@@ -75,6 +72,11 @@ LLM(
 
 ### Docker Launch Command
 ```bash
+# Set these to match your environment
+export MODEL_DIR=/path/to/models
+export RESULTS_DIR=/path/to/results
+export VLLM_IMAGE=rocm/vllm-dev:main  # or any ROCm vLLM image with AITER
+
 docker run --rm \
   --device=/dev/kfd --device=/dev/dri \
   --group-add video --group-add render \
@@ -82,8 +84,8 @@ docker run --rm \
   --security-opt seccomp=unconfined \
   -e HIP_VISIBLE_DEVICES=<gpu_ids> \
   -e VLLM_USE_TRITON_FLASH_ATTN=0 \
-  -v /shared_inference/ravgupta_models:/models \
-  -v /shared_inference/ravgupta_models/results:/results \
+  -v $MODEL_DIR:/models \
+  -v $RESULTS_DIR:/results \
   $VLLM_IMAGE \
   python3 /models/bench.py <model_path> <tp_size> <output_json> <num_prompts>
 ```
@@ -310,16 +312,16 @@ The 192 GB HBM3 per GPU allows running Mixtral-8x7B (93 GB model) on a single GP
 | AITER GEMM failure on TP>1 | CK fused MoE kernels don't support all dimension splits | Fall back to Triton: `VLLM_ROCM_USE_AITER_MOE=0` |
 | OLMoE corrupted weights | Download interrupted on login node | Re-downloaded on compute node |
 | LLaDA models unsupported | `LLaDAMoEModel` arch not in vLLM 0.14 | Building custom inference framework |
-| Docker image not found | `vllm/vllm-openai:latest-rocm` doesn't exist | Used pre-built cluster image with AMD optimizations |
+| Docker image not found | `vllm/vllm-openai:latest-rocm` doesn't exist | Use `rocm/vllm-dev:main` or build from `docker/Dockerfile.rocm` |
 
 ---
 
 ## 7. Reproducing the Results
 
-### Step 1: Allocate a Compute Node
+### Step 1: Allocate a Compute Node with MI300X GPUs
 ```bash
-ssh ravgupta@useocpslog-002.amd.com
-srun --partition=amd-rccl --nodes=1 --ntasks=1 \
+# Adapt to your cluster's scheduler (Slurm example)
+srun --partition=$PARTITION --nodes=1 --ntasks=1 \
   --cpus-per-task=32 --gres=gpu:mi300x:8 \
   --time=04:00:00 --job-name=moe-bench bash
 ```
@@ -331,7 +333,7 @@ rocm-smi --showmeminfo vram
 
 ### Step 3: Prepare Benchmark Script
 
-The benchmark script is at `/shared_inference/ravgupta_models/bench.py`:
+Save the following as `bench.py` alongside your model directory:
 ```python
 import json, time, sys, os
 from multiprocessing import freeze_support
@@ -391,9 +393,10 @@ if __name__ == "__main__":
 ### Step 4: Run a Benchmark
 
 ```bash
-VLLM_IMAGE="rocm/pytorch-private:miali_vllm_0.14.0rc2_ucx_develop_rixl_develop_20260126_retemadi_added_profile_pr18827"
-MODEL_DIR="/shared_inference/ravgupta_models"
-RESULTS_DIR="/shared_inference/ravgupta_models/results"
+# Configure for your environment
+export VLLM_IMAGE=rocm/vllm-dev:main   # Any ROCm vLLM image with AITER support
+export MODEL_DIR=/path/to/models        # Directory containing downloaded HF models
+export RESULTS_DIR=/path/to/results     # Output directory for JSON results
 
 # Single GPU
 docker run --rm \
@@ -408,7 +411,7 @@ docker run --rm \
   $VLLM_IMAGE \
   python3 /models/bench.py /models/Qwen/Qwen1.5-MoE-A2.7B 1 /results/qwen_moe_tp1.json 50
 
-# Multi-GPU (with Triton MoE fallback)
+# Multi-GPU (with Triton MoE fallback for TP>1)
 docker run --rm \
   --device=/dev/kfd --device=/dev/dri \
   --group-add video --group-add render \
@@ -598,15 +601,18 @@ engine (`src/inference/llada_engine.py`) built on HuggingFace Transformers + ROC
 
 ### Step 1: Allocate Compute Node
 ```bash
-srun --partition=amd-rccl --nodes=1 --ntasks=1 \
+# Adapt to your cluster's scheduler (Slurm example)
+srun --partition=$PARTITION --nodes=1 --ntasks=1 \
   --cpus-per-task=32 --gres=gpu:mi300x:8 \
   --time=04:00:00 --job-name=llada-bench bash
 ```
 
 ### Step 2: Run LLaDA-8B (Dense Diffusion)
 ```bash
-VLLM_IMAGE="rocm/pytorch-private:miali_vllm_0.14.0rc2_ucx_develop_rixl_develop_20260126_retemadi"
-MODEL_DIR="/shared_inference/ravgupta_models"
+# Any ROCm PyTorch image works; use the project Dockerfile for a pre-configured image:
+#   docker build -f docker/Dockerfile.llada -t llada-rocm:latest .
+export ROCM_IMAGE=rocm/pytorch:rocm6.3.1_ubuntu22.04_py3.10_pytorch_release_2.4.0
+export MODEL_DIR=/path/to/models
 
 docker run --rm \
   --device=/dev/kfd --device=/dev/dri \
@@ -615,7 +621,7 @@ docker run --rm \
   --security-opt seccomp=unconfined \
   -e HIP_VISIBLE_DEVICES=0 \
   -v $MODEL_DIR:/models \
-  $VLLM_IMAGE \
+  $ROCM_IMAGE \
   bash -c '
 pip install -q transformers accelerate sentencepiece protobuf safetensors 2>/dev/null
 python3 /models/llada_engine.py \
@@ -635,7 +641,7 @@ docker run --rm \
   --security-opt seccomp=unconfined \
   -e HIP_VISIBLE_DEVICES=0 \
   -v $MODEL_DIR:/models \
-  $VLLM_IMAGE \
+  $ROCM_IMAGE \
   bash -c '
 pip install -q transformers accelerate sentencepiece protobuf safetensors 2>/dev/null
 python3 /models/llada_engine.py \
@@ -655,7 +661,7 @@ docker run --rm \
   --security-opt seccomp=unconfined \
   -e HIP_VISIBLE_DEVICES=0,1,2,3 \
   -v $MODEL_DIR:/models \
-  $VLLM_IMAGE \
+  $ROCM_IMAGE \
   bash -c '
 pip install -q transformers accelerate sentencepiece protobuf safetensors 2>/dev/null
 torchrun --nproc_per_node=4 /models/llada_distributed.py \
