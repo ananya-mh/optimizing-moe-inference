@@ -278,6 +278,21 @@ All configs in YAML under `configs/`. Environment variables (set at runtime, nev
 | `MODEL_DIR` | `./models` | Path to model weights |
 | `RESULTS_DIR` | `./results` | Path for benchmark output |
 
+## Custom LLaDA Inference Engine
+
+LLaDA diffusion models are **not supported by vLLM** due to their non-autoregressive masked diffusion architecture. We built a custom inference engine:
+
+| Module | Purpose |
+|--------|---------|
+| `src/inference/llada_engine.py` | Single-GPU LLaDA inference with block-based denoising |
+| `src/inference/llada_distributed.py` | Multi-GPU distributed inference with RCCL |
+| `src/inference/expert_parallel.py` | Expert placement strategies + all-to-all dispatch |
+| `src/inference/profiler.py` | Profiling for torch.profiler and rocprofv3 |
+| `docker/Dockerfile.llada` | Docker image for LLaDA on ROCm |
+| `scripts/run_llada_benchmarks.sh` | Automated sweep runner |
+
+See [Report1.md](Report1.md) for full benchmark results.
+
 ## Abstract Alignment
 
 This codebase implements the full methodology described in the SIEDS 2026 abstract:
@@ -293,6 +308,8 @@ This codebase implements the full methodology described in the SIEDS 2026 abstra
 | Memory bandwidth + CU occupancy analysis | `src/benchmark/metrics.py`, `gpu_info.py` |
 | Multi-GPU and multi-node scaling (up to 4 nodes) | `configs/experiments/multi_node.yaml` |
 | EP load balance analysis | `src/placement/load_balancing.py` |
+| Diffusion MoE inference (LLaDA) | `src/inference/llada_engine.py`, `llada_distributed.py` |
+| Expert Parallelism with RCCL | `src/inference/expert_parallel.py` |
 
 ## License
 
