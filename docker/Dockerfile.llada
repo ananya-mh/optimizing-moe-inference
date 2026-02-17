@@ -1,0 +1,61 @@
+# Dockerfile for LLaDA diffusion LLM inference on AMD ROCm MI300X
+#
+# Uses PyTorch + ROCm with HuggingFace Transformers for running
+# LLaDA-8B and LLaDA-MoE-7B models which are not supported by vLLM.
+#
+# Build:
+#   docker build -f docker/Dockerfile.llada -t llada-rocm:latest .
+#
+# Run (single GPU):
+#   docker run --rm --device=/dev/kfd --device=/dev/dri \
+#     --group-add video --group-add render --ipc=host --shm-size=32g \
+#     -e HIP_VISIBLE_DEVICES=0 \
+#     -v /shared_inference/ravgupta_models:/models \
+#     llada-rocm:latest \
+#     python3 /app/src/inference/llada_engine.py \
+#       --model-path /models/GSAI-ML/LLaDA-8B-Instruct \
+#       --output-json /models/results/llada_8b_tp1.json
+#
+# Run (multi-GPU with RCCL):
+#   docker run --rm --device=/dev/kfd --device=/dev/dri \
+#     --group-add video --group-add render --ipc=host --shm-size=32g \
+#     -e HIP_VISIBLE_DEVICES=0,1,2,3 \
+#     -v /shared_inference/ravgupta_models:/models \
+#     llada-rocm:latest \
+#     torchrun --nproc_per_node=4 /app/src/inference/llada_distributed.py \
+#       --model-path /models/inclusionAI/LLaDA-MoE-7B-A1B-Instruct \
+#       --output-json /models/results/llada_moe_ep4.json
+
+FROM rocm/pytorch:rocm6.3.1_ubuntu22.04_py3.10_pytorch_release_2.4.0
+
+LABEL maintainer="ravgupta@amd.com"
+LABEL description="LLaDA Diffusion LLM Inference on AMD ROCm"
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV HIP_VISIBLE_DEVICES=0
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git wget curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+RUN pip install --no-cache-dir \
+    transformers>=4.46.0 \
+    tokenizers \
+    safetensors \
+    accelerate \
+    sentencepiece \
+    protobuf \
+    numpy \
+    scipy
+
+WORKDIR /app
+
+# Copy the inference code
+COPY src/inference/ /app/src/inference/
+COPY configs/ /app/configs/
+
+# Default: run single-GPU benchmark
+ENTRYPOINT ["python3", "/app/src/inference/llada_engine.py"]
