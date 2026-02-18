@@ -66,9 +66,15 @@ optimizing-moe-inference/
 │       └── multi_node.yaml
 ├── docker/
 │   ├── Dockerfile.rocm                # AMD ROCm (upstream vLLM)
+│   ├── Dockerfile.llada               # ROCm image for LLaDA diffusion models
 │   ├── Dockerfile.cuda                # NVIDIA CUDA
 │   └── docker-compose.yaml
 ├── src/
+│   ├── inference/
+│   │   ├── llada_engine.py            # Custom LLaDA inference (single GPU)
+│   │   ├── llada_distributed.py       # Multi-GPU LLaDA with RCCL
+│   │   ├── expert_parallel.py         # EP placement strategies + dispatch
+│   │   └── profiler.py                # torch.profiler + rocprofv3 hooks
 │   ├── benchmark/
 │   │   ├── runner.py                  # Benchmark orchestrator (vLLM serve + bench)
 │   │   ├── metrics.py                 # Metrics parsing (throughput, TTFT, ITL)
@@ -89,6 +95,7 @@ optimizing-moe-inference/
 ├── scripts/
 │   ├── download_models.sh             # Model downloader (HF_TOKEN from env)
 │   ├── run_benchmark.sh               # Main entry point (auto-detects GPU)
+│   ├── run_llada_benchmarks.sh        # LLaDA sweep runner (steps, gen length)
 │   ├── run_profiling.sh               # Profiling (torch/rocprof/nsight)
 │   └── setup_env.sh                   # Environment setup
 ├── analysis/
@@ -97,6 +104,7 @@ optimizing-moe-inference/
 │   └── generate_tables.py             # LaTeX tables for paper
 ├── experiments/                       # Per-experiment notes
 ├── results/                           # Output (gitignored)
+├── Report1.md                         # Benchmark results from MI300X experiments
 ├── requirements.txt
 ├── setup.py
 └── LICENSE                            # MIT
