@@ -195,33 +195,42 @@ python analysis/plot_load_balance.py      # EP load balance heatmaps
 python analysis/generate_tables.py        # LaTeX tables for paper
 ```
 
-## Experiment Design
+## Experiment Plan
 
-### Experiment 1: Single-GPU Baseline
-- **Goal**: Establish per-model inference characteristics
-- **Models**: LLaDA-MoE-7B, Qwen-MoE-A2.7B, OLMoE-1B-7B, Mixtral-8x7B, LLaDA-8B
-- **Sweep**: Workloads (short/medium/long) x Concurrency (1-64)
-- **Metrics**: Throughput (tok/s), TTFT, ITL, GPU memory, CU utilization
+The experiments are organized into **7 phases**, each building on the previous. See **[experiment_starter.md](experiment_starter.md)** for the complete end-to-end guide with exact commands, data capture tables, and a checklist.
 
-### Experiment 2: Expert Placement (Factorial Study)
-- **Goal**: Isolate contribution of each strategy via controlled factorial design
-- **Strategies**: TP-only, EP-only, TP+EP hybrid, DP+EP
-- **Factors**: Model x GPUs x Strategy x Batching x Queue depth x Workload
-- **Analysis**: ANOVA to determine which factors most impact throughput
+| Phase | Goal | Est. Time |
+|-------|------|-----------|
+| **1. Single-GPU Baselines** | Per-model throughput, profiling traces | 2-3h |
+| **2. Expert Routing Analysis** | Activation patterns, Gini coefficients, co-activation | 1-2h |
+| **3. Multi-GPU Placement** | TP vs EP vs hybrid across 1-8 GPUs (factorial study) | 8-12h |
+| **4. Expert-Aware Batching** | Queue depth sweep [4-256] per model | 3-4h |
+| **5. CPU Predictor Training** | Train RandomForest on 50+ data points from Phases 1-4 | 1-2h |
+| **6. Multi-Node Scaling** | EP across 2-4 nodes with CX-7 RDMA (DeepSeek-V3, DBRX) | 4-8h |
+| **7. Paper Analysis** | Figures, ANOVA, LaTeX tables for SIEDS 2026 | 2-3h |
 
-### Experiment 3: Expert-Aware Batching
-- **Goal**: Optimize queue depth for maximum GPU (CU) occupancy
-- **Method**: Sweep queue depth [4, 8, 16, 32, 64, 128, 256]
-- **Metrics**: Throughput, CU occupancy, expert wait time
+### Quick Phase 1 Start
 
-### Experiment 4: Multi-GPU Scaling
-- **Goal**: Scaling efficiency from 1 to 8 GPUs
-- **All2All backends**: allgather_reducescatter, pplx
-- **AMD-specific**: AITer fused MoE kernels, hipBLASLt GEMM
+```bash
+# Download models and run single-GPU baselines
+bash scripts/download_models.sh single_gpu
+bash scripts/run_benchmark.sh --model mixtral_8x7b --experiment single_gpu
+bash scripts/run_llada_benchmarks.sh
+```
 
-### Experiment 5: Multi-Node Scaling
-- **Goal**: Cross-node EP with RDMA (2-4 nodes, CX-7 NICs)
-- **Models**: DBRX (132B), DeepSeek-V3 (671B)
+### Experiment Details
+
+**Experiment 1 — Single-GPU Baseline**: Sweep workloads (short/medium/long) x concurrency (1-64) for OLMoE, Qwen-MoE, Mixtral, LLaDA-MoE, LLaDA-8B. Metrics: throughput, TTFT, ITL, GPU memory, CU utilization.
+
+**Experiment 2 — Expert Placement (Factorial Study)**: Full factorial design crossing Model x GPUs x Strategy (TP/EP/hybrid) x Queue depth x Workload. ANOVA determines which factors most impact throughput. Run `python -m src.benchmark.factorial_study` to generate the design matrix.
+
+**Experiment 3 — Expert-Aware Batching**: Queue depth sweep [4, 8, 16, 32, 64, 128, 256] per model to find the throughput-memory sweet spot.
+
+**Experiment 4 — Multi-GPU Scaling**: Scaling efficiency from 1 to 8 GPUs with AITer fused MoE kernels and hipBLASLt GEMM. Compare allgather_reducescatter vs pplx backends.
+
+**Experiment 5 — Multi-Node Scaling**: Cross-node EP with RDMA (2-4 nodes, CX-7 NICs) for DBRX (132B) and DeepSeek-V3 (671B).
+
+See [Report1.md](Report1.md) for results already collected.
 
 ## EP Load Balancing Analysis
 
