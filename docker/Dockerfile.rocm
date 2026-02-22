@@ -1,0 +1,43 @@
+# ROCm-based Docker image for MoE inference optimization on AMD MI300X
+#
+# Uses the official upstream AMD ROCm vLLM image from Docker Hub.
+# See: https://hub.docker.com/r/rocm/vllm
+#
+# Build: docker build -f docker/Dockerfile.rocm -t moe-opt:rocm .
+# Custom base: docker build -f docker/Dockerfile.rocm --build-arg BASE_IMAGE=rocm/vllm:rocm6.3.1_mi300_ubuntu22.04_py3.12_vllm_0.7.3 -t moe-opt:rocm .
+ARG BASE_IMAGE=rocm/vllm-dev:main
+FROM ${BASE_IMAGE}
+
+LABEL maintainer="optimizing-moe-inference"
+LABEL description="MoE inference optimization framework - AMD ROCm (upstream vLLM)"
+
+# Install profiling and system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    rocprofiler-dev \
+    numactl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace/moe-opt
+
+# Copy and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+RUN pip install --no-cache-dir -e .
+
+# AMD-specific optimizations for MoE inference
+# These are the recommended env vars from AMD's MoE inference playbook
+ENV VLLM_ROCM_USE_AITER=1
+ENV VLLM_ROCM_USE_AITER_MOE=1
+ENV HIP_FORCE_DEV_KERNARG=1
+ENV TORCH_BLAS_PREFER_HIPBLASLT=1
+ENV NCCL_MIN_NCHANNELS=112
+ENV VLLM_USE_TRITON_FLASH_ATTN=0
+
+# HF cache directory (mount model weights at runtime)
+ENV HF_HOME=/models/huggingface
+# Token MUST be provided at runtime: docker run -e HF_TOKEN=...
+ENV HF_TOKEN=""
+
+ENTRYPOINT ["/bin/bash"]
