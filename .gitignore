@@ -27,3 +27,4 @@ results/profiles/
 *.tar.gz
 *.log
 generate_project.py
+/models

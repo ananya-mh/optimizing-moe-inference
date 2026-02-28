@@ -57,6 +57,7 @@ def build_server_cmd(
         "--gpu-memory-utilization", str(gpu_mem_util),
         "--dtype", dtype,
         "--disable-log-requests",
+        "--enforce-eager",
     ]
     if dp_size > 1:
         cmd.extend(["--data-parallel-size", str(dp_size)])
@@ -81,12 +82,12 @@ def build_bench_cmd(
     """Build the vllm bench serve command."""
     return [
         "vllm", "bench", "serve",
-        "--model", "placeholder",  # Will use the running server's model
+        "--dataset-name", "random",
         "--endpoint", "/v1/completions",
         "--num-prompts", str(num_prompts),
         "--random-input-len", str(input_len),
         "--random-output-len", str(output_len),
-        "--concurrency", str(concurrency),
+        "--max-concurrency", str(concurrency),
         "--port", str(port),
     ]
 
@@ -114,6 +115,7 @@ def run_single_benchmark(
     vendor: str,
     env_overrides: dict[str, str],
     profile: bool = False,
+    bench_timeout: int = 600,
 ) -> dict[str, Any]:
     """Run a single benchmark configuration.
 
@@ -191,7 +193,7 @@ def run_single_benchmark(
             env=env,
             capture_output=True,
             text=True,
-            timeout=600,
+            timeout=bench_timeout,
         )
 
         # Collect post-benchmark GPU metrics
@@ -246,7 +248,8 @@ def save_results(results: list[dict], experiment_name: str, model_key: str):
 @click.option("--strategy", "-s", default=None, help="Specific strategy name (run all if not set)")
 @click.option("--profile", is_flag=True, help="Enable torch profiler")
 @click.option("--dry-run", is_flag=True, help="Print commands without executing")
-def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, dry_run):
+@click.option("--bench-timeout", "-t", default=600, type=int, help="Benchmark subprocess timeout in seconds (default 600)")
+def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, dry_run, bench_timeout):
     """MoE Inference Benchmark Runner.
 
     Runs systematic benchmarks across models, placement strategies,
@@ -316,6 +319,7 @@ def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, 
                     vendor=vendor,
                     env_overrides=env_vars,
                     profile=profile,
+                    bench_timeout=bench_timeout,
                 )
                 all_results.append(result)
 

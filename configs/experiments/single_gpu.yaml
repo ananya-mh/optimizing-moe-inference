@@ -19,8 +19,9 @@ experiment:
       description: "All experts co-located on single GPU"
 
   workloads:
+    # Fewer prompts so each run fits within default bench timeout (e.g. 600s)
     - name: "short_prompt"
-      num_prompts: 500
+      num_prompts: 100
       input_len: 128
       output_len: 128
     - name: "medium_prompt"

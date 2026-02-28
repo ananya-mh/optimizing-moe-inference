@@ -36,7 +36,7 @@ def parse_bench_output(output: str) -> dict[str, Any]:
             metrics[key] = float(match.group(1))
 
     # Try to parse JSON output if present
-    json_match = re.search(r"\{[^{}]*"throughput"[^{}]*\}", output)
+    json_match = re.search(r"\{[^{}]*\"throughput\"[^{}]*\}", output)
     if json_match:
         try:
             data = json.loads(json_match.group())
