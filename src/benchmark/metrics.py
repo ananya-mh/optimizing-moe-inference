@@ -18,16 +18,16 @@ def parse_bench_output(output: str) -> dict[str, Any]:
 
     # Common patterns in vllm bench serve output
     patterns = {
-        "throughput_tok_per_sec": r"Throughput:\s+([\d.]+)\s+tok(?:ens)?/s",
-        "throughput_req_per_sec": r"Request throughput:\s+([\d.]+)\s+req/s",
-        "ttft_avg_ms": r"(?:TTFT|Time to first token).*?avg[:\s]+([\d.]+)",
-        "ttft_p50_ms": r"(?:TTFT|Time to first token).*?p50[:\s]+([\d.]+)",
-        "ttft_p99_ms": r"(?:TTFT|Time to first token).*?p99[:\s]+([\d.]+)",
-        "itl_avg_ms": r"(?:ITL|Inter-token latency).*?avg[:\s]+([\d.]+)",
-        "itl_p50_ms": r"(?:ITL|Inter-token latency).*?p50[:\s]+([\d.]+)",
-        "itl_p99_ms": r"(?:ITL|Inter-token latency).*?p99[:\s]+([\d.]+)",
-        "e2e_latency_avg_ms": r"(?:E2E|End-to-end).*?avg[:\s]+([\d.]+)",
-        "e2e_latency_p99_ms": r"(?:E2E|End-to-end).*?p99[:\s]+([\d.]+)",
+    "throughput_tok_per_sec": r"Output token throughput \(tok/s\):\s+([\d.]+)",
+    "throughput_req_per_sec": r"Request throughput \(req/s\):\s+([\d.]+)",
+    "ttft_avg_ms": r"Mean TTFT \(ms\):\s+([\d.]+)",
+    "ttft_p50_ms": r"Median TTFT \(ms\):\s+([\d.]+)",
+    "ttft_p99_ms": r"P99 TTFT \(ms\):\s+([\d.]+)",
+    "itl_avg_ms": r"Mean ITL \(ms\):\s+([\d.]+)",
+    "itl_p50_ms": r"Median ITL \(ms\):\s+([\d.]+)",
+    "itl_p99_ms": r"P99 ITL \(ms\):\s+([\d.]+)",
+    "e2e_latency_avg_ms": r"Mean TPOT \(ms\):\s+([\d.]+)",
+    "e2e_latency_p99_ms": r"P99 TPOT \(ms\):\s+([\d.]+)",
     }
 
     for key, pattern in patterns.items():

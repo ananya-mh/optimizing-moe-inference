@@ -25,11 +25,11 @@ experiment:
       input_len: 128
       output_len: 128
     - name: "medium_prompt"
-      num_prompts: 200
+      num_prompts: 50
       input_len: 512
       output_len: 256
     - name: "long_prompt"
-      num_prompts: 100
+      num_prompts: 20
       input_len: 2048
       output_len: 512
 
