@@ -30,7 +30,7 @@ experiment:
       output_len: 256
     - name: "long_prompt"
       num_prompts: 20
-      input_len: 2048
+      input_len: 1024
       output_len: 512
 
   concurrency_levels: [1, 2, 4, 8, 16, 32, 64]
