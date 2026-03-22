@@ -326,7 +326,7 @@ def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, 
                 if result.get("success"):
                     metrics = result.get("metrics", {})
                     print(f"  Throughput: {metrics.get('throughput_tok_per_sec', 'N/A')} tok/s")
-                    print(f"  TTFT: {metrics.get('ttft_ms', 'N/A')} ms")
+                    print(f"  TTFT: {metrics.get('ttft_avg_ms', 'N/A')} ms")
                 else:
                     print(f"  FAILED: {result.get('error', 'unknown')}")
 

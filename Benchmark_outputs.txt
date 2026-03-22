@@ -1,0 +1,99 @@
+=== MoE Inference Benchmark ===
+GPU Vendor: nvidia
+Project Dir: /content/optimizing-moe-inference
+
+NVIDIA environment configured
+============================================================
+MoE Inference Optimization - Benchmark Runner
+============================================================
+
+GPU Vendor: NVIDIA
+Detected 1 NVIDIA GPUs:
+  [0] NVIDIA A100-SXM4-80GB: 79.2/80.0 GB free, 0% util
+
+Model: allenai/OLMoE-1B-7B-0924
+  Total params: 6.9B
+  Active params: 1.3B
+  Experts: 64 (top-8)
+
+Experiment: single_gpu_baseline
+  Strategies: ['baseline_no_ep']
+  Workloads: ['short_prompt', 'medium_prompt', 'long_prompt']
+  Concurrency: [1, 2, 4, 8, 16, 32, 64]
+  Total runs: 21
+
+--- Run 1/21 ---
+  Strategy: baseline_no_ep, Workload: short_prompt, Concurrency: 1
+  Starting vLLM server: vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size...
+  Waiting for server health...
+  Running benchmark (concurrency=1)...
+  Throughput: 44.74 tok/s
+  TTFT: N/A ms
+
+--- Run 2/21 ---
+  Strategy: baseline_no_ep, Workload: short_prompt, Concurrency: 2
+  Starting vLLM server: vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size...
+  Waiting for server health...
+  Running benchmark (concurrency=2)...
+  Throughput: 86.93 tok/s
+  TTFT: N/A ms
+
+--- Run 3/21 ---
+  Strategy: baseline_no_ep, Workload: short_prompt, Concurrency: 4
+  Starting vLLM server: vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size...
+  Waiting for server health...
+  Running benchmark (concurrency=4)...
+  Throughput: 172.07 tok/s
+  TTFT: N/A ms
+
+--- Run 4/21 ---
+  Strategy: baseline_no_ep, Workload: short_prompt, Concurrency: 8
+  Starting vLLM server: vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size...
+  Waiting for server health...
+  Running benchmark (concurrency=8)...
+  Throughput: 331.45 tok/s
+  TTFT: N/A ms
+
+--- Run 5/21 ---
+  Strategy: baseline_no_ep, Workload: short_prompt, Concurrency: 16
+  Starting vLLM server: vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size...
+  Waiting for server health...
+  Running benchmark (concurrency=16)...
+  Throughput: 586.41 tok/s
+  TTFT: N/A ms
+
+--- Run 6/21 ---
+  Strategy: baseline_no_ep, Workload: short_prompt, Concurrency: 32
+  Starting vLLM server: vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size...
+  Waiting for server health...
+  Running benchmark (concurrency=32)...
+  Throughput: 1048.18 tok/s
+  TTFT: N/A ms
+
+--- Run 7/21 ---
+  Strategy: baseline_no_ep, Workload: short_prompt, Concurrency: 64
+  Starting vLLM server: vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size...
+  Waiting for server health...
+  Running benchmark (concurrency=64)...
+  Throughput: 1999.51 tok/s
+  TTFT: N/A ms
+
+--- Run 8/21 ---
+  Strategy: baseline_no_ep, Workload: medium_prompt, Concurrency: 1
+  Starting vLLM server: vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size...
+  Waiting for server health...
+  Running benchmark (concurrency=1)...
+  FAILED: Benchmark timed out
+
+--- Run 9/21 ---
+  Strategy: baseline_no_ep, Workload: medium_prompt, Concurrency: 2
+  Starting vLLM server: vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size...
+  Waiting for server health...
+  Running benchmark (concurrency=2)...
+  FAILED: Benchmark timed out
+
+--- Run 10/21 ---
+  Strategy: baseline_no_ep, Workload: medium_prompt, Concurrency: 4
+  Starting vLLM server: vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size...
+  Waiting for server health...
+  Running benchmark (concurrency=4)...
