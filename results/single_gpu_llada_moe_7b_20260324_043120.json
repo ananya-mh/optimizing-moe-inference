@@ -1,0 +1,314 @@
+[
+  {
+    "timestamp": "2026-03-24T04:13:42.127085",
+    "model_id": "inclusionAI/LLaDA-MoE-7B-A1B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "steps_32",
+      "num_prompts": 5,
+      "gen_length": 128,
+      "steps": 32
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--inclusionAI--LLaDA-MoE-7B-A1B-Instruct/snapshots/783d3467f108d28ac0a78d3e41af16ab05cabd8d",
+    "bench_cmd": "--gen-length 128 --steps 32 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 10.1,
+      "avg_time_per_prompt_ms": 12654.62,
+      "avg_model_forward_ms": 12609.07,
+      "avg_sampling_ms": 40.75,
+      "model_load_time_s": 13.0,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 27.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  },
+  {
+    "timestamp": "2026-03-24T04:16:46.157897",
+    "model_id": "inclusionAI/LLaDA-MoE-7B-A1B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "steps_64",
+      "num_prompts": 5,
+      "gen_length": 128,
+      "steps": 64
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--inclusionAI--LLaDA-MoE-7B-A1B-Instruct/snapshots/783d3467f108d28ac0a78d3e41af16ab05cabd8d",
+    "bench_cmd": "--gen-length 128 --steps 64 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 4.9,
+      "avg_time_per_prompt_ms": 26161.67,
+      "avg_model_forward_ms": 26070.63,
+      "avg_sampling_ms": 82.53,
+      "model_load_time_s": 12.5,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 27.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 1.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  },
+  {
+    "timestamp": "2026-03-24T04:22:24.465518",
+    "model_id": "inclusionAI/LLaDA-MoE-7B-A1B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "steps_128",
+      "num_prompts": 5,
+      "gen_length": 128,
+      "steps": 128
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--inclusionAI--LLaDA-MoE-7B-A1B-Instruct/snapshots/783d3467f108d28ac0a78d3e41af16ab05cabd8d",
+    "bench_cmd": "--gen-length 128 --steps 128 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 2.5,
+      "avg_time_per_prompt_ms": 51845.14,
+      "avg_model_forward_ms": 51667.68,
+      "avg_sampling_ms": 162.28,
+      "model_load_time_s": 12.5,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 1.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 26.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  },
+  {
+    "timestamp": "2026-03-24T04:25:16.489671",
+    "model_id": "inclusionAI/LLaDA-MoE-7B-A1B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "gen_64",
+      "num_prompts": 5,
+      "gen_length": 64,
+      "steps": 64
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--inclusionAI--LLaDA-MoE-7B-A1B-Instruct/snapshots/783d3467f108d28ac0a78d3e41af16ab05cabd8d",
+    "bench_cmd": "--gen-length 64 --steps 64 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 2.6,
+      "avg_time_per_prompt_ms": 24258.12,
+      "avg_model_forward_ms": 24193.76,
+      "avg_sampling_ms": 56.87,
+      "model_load_time_s": 12.4,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 26.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 1.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  },
+  {
+    "timestamp": "2026-03-24T04:28:18.072063",
+    "model_id": "inclusionAI/LLaDA-MoE-7B-A1B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "gen_128",
+      "num_prompts": 5,
+      "gen_length": 128,
+      "steps": 64
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--inclusionAI--LLaDA-MoE-7B-A1B-Instruct/snapshots/783d3467f108d28ac0a78d3e41af16ab05cabd8d",
+    "bench_cmd": "--gen-length 128 --steps 64 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 5.0,
+      "avg_time_per_prompt_ms": 25801.41,
+      "avg_model_forward_ms": 25711.08,
+      "avg_sampling_ms": 82.06,
+      "model_load_time_s": 12.5,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 1.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 4.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  },
+  {
+    "timestamp": "2026-03-24T04:31:20.512472",
+    "model_id": "inclusionAI/LLaDA-MoE-7B-A1B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "gen_256",
+      "num_prompts": 5,
+      "gen_length": 256,
+      "steps": 64
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--inclusionAI--LLaDA-MoE-7B-A1B-Instruct/snapshots/783d3467f108d28ac0a78d3e41af16ab05cabd8d",
+    "bench_cmd": "--gen-length 256 --steps 64 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 9.9,
+      "avg_time_per_prompt_ms": 25957.25,
+      "avg_model_forward_ms": 25820.74,
+      "avg_sampling_ms": 126.64,
+      "model_load_time_s": 12.4,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 4.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 33.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  }
+]

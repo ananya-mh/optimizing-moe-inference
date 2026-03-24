@@ -1,0 +1,314 @@
+[
+  {
+    "timestamp": "2026-03-24T04:08:46.479263",
+    "model_id": "GSAI-ML/LLaDA-8B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "steps_32",
+      "num_prompts": 5,
+      "gen_length": 128,
+      "steps": 32
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--GSAI-ML--LLaDA-8B-Instruct/snapshots/08b83a6feb34df1a6011b80c3c00c7563e963b07",
+    "bench_cmd": "--gen-length 128 --steps 32 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 99.1,
+      "avg_time_per_prompt_ms": 1291.58,
+      "avg_model_forward_ms": 1256.55,
+      "avg_sampling_ms": 30.84,
+      "model_load_time_s": 11.5,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  },
+  {
+    "timestamp": "2026-03-24T04:09:21.878686",
+    "model_id": "GSAI-ML/LLaDA-8B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "steps_64",
+      "num_prompts": 5,
+      "gen_length": 128,
+      "steps": 64
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--GSAI-ML--LLaDA-8B-Instruct/snapshots/08b83a6feb34df1a6011b80c3c00c7563e963b07",
+    "bench_cmd": "--gen-length 128 --steps 64 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 49.5,
+      "avg_time_per_prompt_ms": 2584.45,
+      "avg_model_forward_ms": 2514.36,
+      "avg_sampling_ms": 62.69,
+      "model_load_time_s": 11.6,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  },
+  {
+    "timestamp": "2026-03-24T04:10:13.229199",
+    "model_id": "GSAI-ML/LLaDA-8B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "steps_128",
+      "num_prompts": 5,
+      "gen_length": 128,
+      "steps": 128
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--GSAI-ML--LLaDA-8B-Instruct/snapshots/08b83a6feb34df1a6011b80c3c00c7563e963b07",
+    "bench_cmd": "--gen-length 128 --steps 128 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 24.3,
+      "avg_time_per_prompt_ms": 5263.99,
+      "avg_model_forward_ms": 5127.46,
+      "avg_sampling_ms": 123.12,
+      "model_load_time_s": 11.5,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  },
+  {
+    "timestamp": "2026-03-24T04:10:48.487107",
+    "model_id": "GSAI-ML/LLaDA-8B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "gen_64",
+      "num_prompts": 5,
+      "gen_length": 64,
+      "steps": 64
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--GSAI-ML--LLaDA-8B-Instruct/snapshots/08b83a6feb34df1a6011b80c3c00c7563e963b07",
+    "bench_cmd": "--gen-length 64 --steps 64 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 24.8,
+      "avg_time_per_prompt_ms": 2578.38,
+      "avg_model_forward_ms": 2527.97,
+      "avg_sampling_ms": 43.88,
+      "model_load_time_s": 11.6,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 31.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 1.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  },
+  {
+    "timestamp": "2026-03-24T04:11:23.405466",
+    "model_id": "GSAI-ML/LLaDA-8B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "gen_128",
+      "num_prompts": 5,
+      "gen_length": 128,
+      "steps": 64
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--GSAI-ML--LLaDA-8B-Instruct/snapshots/08b83a6feb34df1a6011b80c3c00c7563e963b07",
+    "bench_cmd": "--gen-length 128 --steps 64 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 50.6,
+      "avg_time_per_prompt_ms": 2528.41,
+      "avg_model_forward_ms": 2459.42,
+      "avg_sampling_ms": 61.87,
+      "model_load_time_s": 11.6,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 1.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 22.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  },
+  {
+    "timestamp": "2026-03-24T04:11:59.135463",
+    "model_id": "GSAI-ML/LLaDA-8B-Instruct",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "gen_256",
+      "num_prompts": 5,
+      "gen_length": 256,
+      "steps": 64
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "python /content/optimizing-moe-inference/src/inference/llada_engine.py --model-path /root/.cache/huggingface/hub/models--GSAI-ML--LLaDA-8B-Instruct/snapshots/08b83a6feb34df1a6011b80c3c00c7563e963b07",
+    "bench_cmd": "--gen-length 256 --steps 64 --num-prompts 5",
+    "metrics": {
+      "throughput_tok_per_sec": 96.1,
+      "avg_time_per_prompt_ms": 2664.72,
+      "avg_model_forward_ms": 2558.98,
+      "avg_sampling_ms": 97.01,
+      "model_load_time_s": 11.5,
+      "expert_load_distribution": null
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 22.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 0.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true,
+    "error": null
+  }
+]
