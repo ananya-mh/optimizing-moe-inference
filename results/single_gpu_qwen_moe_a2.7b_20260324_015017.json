@@ -1,0 +1,1102 @@
+[
+  {
+    "timestamp": "2026-03-24T01:50:17.224076",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 1 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 192.59,
+      "throughput_req_per_sec": 1.5,
+      "ttft_avg_ms": 30.06,
+      "ttft_p50_ms": 29.69,
+      "ttft_p99_ms": 31.57,
+      "itl_avg_ms": 5.0,
+      "itl_p50_ms": 4.99,
+      "itl_p99_ms": 5.36,
+      "e2e_latency_avg_ms": 5.0,
+      "e2e_latency_p99_ms": 5.0
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224109",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 2,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 2 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 316.37,
+      "throughput_req_per_sec": 2.47,
+      "ttft_avg_ms": 26.16,
+      "ttft_p50_ms": 26.27,
+      "ttft_p99_ms": 33.75,
+      "itl_avg_ms": 6.16,
+      "itl_p50_ms": 6.27,
+      "itl_p99_ms": 6.67,
+      "e2e_latency_avg_ms": 6.16,
+      "e2e_latency_p99_ms": 6.42
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224124",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 4,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 4 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 511.37,
+      "throughput_req_per_sec": 4.0,
+      "ttft_avg_ms": 34.92,
+      "ttft_p50_ms": 35.65,
+      "ttft_p99_ms": 43.17,
+      "itl_avg_ms": 7.6,
+      "itl_p50_ms": 7.67,
+      "itl_p99_ms": 8.63,
+      "e2e_latency_avg_ms": 7.6,
+      "e2e_latency_p99_ms": 8.35
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224138",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 8,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 8 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 773.54,
+      "throughput_req_per_sec": 6.04,
+      "ttft_avg_ms": 44.43,
+      "ttft_p50_ms": 45.06,
+      "ttft_p99_ms": 58.56,
+      "itl_avg_ms": 9.75,
+      "itl_p50_ms": 9.84,
+      "itl_p99_ms": 15.81,
+      "e2e_latency_avg_ms": 9.75,
+      "e2e_latency_p99_ms": 10.79
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224152",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 16,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 16 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1155.24,
+      "throughput_req_per_sec": 9.03,
+      "ttft_avg_ms": 61.29,
+      "ttft_p50_ms": 60.78,
+      "ttft_p99_ms": 98.81,
+      "itl_avg_ms": 12.56,
+      "itl_p50_ms": 12.6,
+      "itl_p99_ms": 18.59,
+      "e2e_latency_avg_ms": 12.56,
+      "e2e_latency_p99_ms": 13.64
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224166",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 32,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 32 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1708.01,
+      "throughput_req_per_sec": 13.34,
+      "ttft_avg_ms": 89.8,
+      "ttft_p50_ms": 89.55,
+      "ttft_p99_ms": 124.44,
+      "itl_avg_ms": 15.97,
+      "itl_p50_ms": 16.29,
+      "itl_p99_ms": 20.13,
+      "e2e_latency_avg_ms": 15.97,
+      "e2e_latency_p99_ms": 16.76
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224195",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 64,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 64 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 2430.01,
+      "throughput_req_per_sec": 18.98,
+      "ttft_avg_ms": 166.78,
+      "ttft_p50_ms": 221.88,
+      "ttft_p99_ms": 234.51,
+      "itl_avg_ms": 19.78,
+      "itl_p50_ms": 20.22,
+      "itl_p99_ms": 23.74,
+      "e2e_latency_avg_ms": 19.78,
+      "e2e_latency_p99_ms": 21.04
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224208",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 2,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 2 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 313.27,
+      "throughput_req_per_sec": 1.22,
+      "ttft_avg_ms": 28.86,
+      "ttft_p50_ms": 29.05,
+      "ttft_p99_ms": 38.87,
+      "itl_avg_ms": 6.3,
+      "itl_p50_ms": 6.42,
+      "itl_p99_ms": 6.83,
+      "e2e_latency_avg_ms": 6.3,
+      "e2e_latency_p99_ms": 6.62
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224220",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 4,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 4 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 507.57,
+      "throughput_req_per_sec": 1.98,
+      "ttft_avg_ms": 41.9,
+      "ttft_p50_ms": 42.5,
+      "ttft_p99_ms": 53.33,
+      "itl_avg_ms": 7.5,
+      "itl_p50_ms": 7.4,
+      "itl_p99_ms": 8.79,
+      "e2e_latency_avg_ms": 7.5,
+      "e2e_latency_p99_ms": 8.52
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224233",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 8,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 8 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 775.65,
+      "throughput_req_per_sec": 3.03,
+      "ttft_avg_ms": 52.78,
+      "ttft_p50_ms": 53.31,
+      "ttft_p99_ms": 71.05,
+      "itl_avg_ms": 9.43,
+      "itl_p50_ms": 9.06,
+      "itl_p99_ms": 11.61,
+      "e2e_latency_avg_ms": 9.43,
+      "e2e_latency_p99_ms": 11.07
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224244",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 16,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 16 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1106.37,
+      "throughput_req_per_sec": 4.32,
+      "ttft_avg_ms": 79.84,
+      "ttft_p50_ms": 78.75,
+      "ttft_p99_ms": 107.83,
+      "itl_avg_ms": 12.57,
+      "itl_p50_ms": 13.4,
+      "itl_p99_ms": 15.15,
+      "e2e_latency_avg_ms": 12.57,
+      "e2e_latency_p99_ms": 13.77
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224256",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 32,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 32 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1531.95,
+      "throughput_req_per_sec": 5.98,
+      "ttft_avg_ms": 112.46,
+      "ttft_p50_ms": 106.51,
+      "ttft_p99_ms": 171.57,
+      "itl_avg_ms": 16.44,
+      "itl_p50_ms": 17.19,
+      "itl_p99_ms": 19.19,
+      "e2e_latency_avg_ms": 16.44,
+      "e2e_latency_p99_ms": 17.74
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224268",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 64,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 64 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 2178.43,
+      "throughput_req_per_sec": 8.51,
+      "ttft_avg_ms": 196.01,
+      "ttft_p50_ms": 207.3,
+      "ttft_p99_ms": 233.94,
+      "itl_avg_ms": 22.15,
+      "itl_p50_ms": 22.15,
+      "itl_p99_ms": 23.61,
+      "e2e_latency_avg_ms": 22.14,
+      "e2e_latency_p99_ms": 22.24
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224280",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 1 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 174.63,
+      "throughput_req_per_sec": 0.34,
+      "ttft_avg_ms": 54.33,
+      "ttft_p50_ms": 55.63,
+      "ttft_p99_ms": 66.29,
+      "itl_avg_ms": 5.63,
+      "itl_p50_ms": 5.63,
+      "itl_p99_ms": 5.94,
+      "e2e_latency_avg_ms": 5.63,
+      "e2e_latency_p99_ms": 5.66
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224293",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 2,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 2 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 298.95,
+      "throughput_req_per_sec": 0.58,
+      "ttft_avg_ms": 33.85,
+      "ttft_p50_ms": 35.0,
+      "ttft_p99_ms": 45.3,
+      "itl_avg_ms": 6.64,
+      "itl_p50_ms": 6.79,
+      "itl_p99_ms": 7.23,
+      "e2e_latency_avg_ms": 6.64,
+      "e2e_latency_p99_ms": 6.96
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224305",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 4,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 4 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 504.05,
+      "throughput_req_per_sec": 0.98,
+      "ttft_avg_ms": 50.41,
+      "ttft_p50_ms": 47.54,
+      "ttft_p99_ms": 68.93,
+      "itl_avg_ms": 7.84,
+      "itl_p50_ms": 8.08,
+      "itl_p99_ms": 8.71,
+      "e2e_latency_avg_ms": 7.84,
+      "e2e_latency_p99_ms": 8.41
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224316",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 8,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 8 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 688.72,
+      "throughput_req_per_sec": 1.35,
+      "ttft_avg_ms": 77.87,
+      "ttft_p50_ms": 81.89,
+      "ttft_p99_ms": 98.8,
+      "itl_avg_ms": 9.92,
+      "itl_p50_ms": 9.81,
+      "itl_p99_ms": 12.25,
+      "e2e_latency_avg_ms": 9.92,
+      "e2e_latency_p99_ms": 11.38
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224328",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 16,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 16 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 896.47,
+      "throughput_req_per_sec": 1.75,
+      "ttft_avg_ms": 116.12,
+      "ttft_p50_ms": 133.76,
+      "ttft_p99_ms": 147.92,
+      "itl_avg_ms": 13.01,
+      "itl_p50_ms": 14.1,
+      "itl_p99_ms": 15.72,
+      "e2e_latency_avg_ms": 13.01,
+      "e2e_latency_p99_ms": 14.36
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224339",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 32,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 32 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1125.29,
+      "throughput_req_per_sec": 2.2,
+      "ttft_avg_ms": 171.3,
+      "ttft_p50_ms": 167.99,
+      "ttft_p99_ms": 192.41,
+      "itl_avg_ms": 17.43,
+      "itl_p50_ms": 17.41,
+      "itl_p99_ms": 18.89,
+      "e2e_latency_avg_ms": 17.43,
+      "e2e_latency_p99_ms": 17.45
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T01:50:17.224351",
+    "model_id": "Qwen/Qwen1.5-MoE-A2.7B",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 64,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve Qwen/Qwen1.5-MoE-A2.7B --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 64 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1122.77,
+      "throughput_req_per_sec": 2.19,
+      "ttft_avg_ms": 163.9,
+      "ttft_p50_ms": 178.32,
+      "ttft_p99_ms": 180.88,
+      "itl_avg_ms": 17.49,
+      "itl_p50_ms": 17.48,
+      "itl_p99_ms": 18.68,
+      "e2e_latency_avg_ms": 17.49,
+      "e2e_latency_p99_ms": 17.53
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 37650.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  }
+]
