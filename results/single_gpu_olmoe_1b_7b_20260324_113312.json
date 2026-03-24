@@ -1,0 +1,1430 @@
+[
+  {
+    "timestamp": "2026-03-24T11:11:10.392347",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 1 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 73.56,
+      "throughput_req_per_sec": 0.57,
+      "ttft_avg_ms": 55.08,
+      "ttft_p50_ms": 32.39,
+      "ttft_p99_ms": 57.31,
+      "itl_avg_ms": 13.28,
+      "itl_p50_ms": 13.33,
+      "itl_p99_ms": 14.01,
+      "e2e_latency_avg_ms": 13.27,
+      "e2e_latency_p99_ms": 13.41,
+      "raw_output_tail": "     12800     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              0.57      \nOutput token throughput (tok/s):         73.56     \nPeak output token throughput (tok/s):    76.00     \nPeak concurrent requests:                2.00      \nTotal token throughput (tok/s):          147.12    \n---------------Time to First Token----------------\nMean TTFT (ms):                          55.08     \nMedian TTFT (ms):                        32.39     \nP99 TTFT (ms):                           57.31     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.27     \nMedian TPOT (ms):                        13.29     \nP99 TPOT (ms):                           13.41     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.28     \nMedian ITL (ms):                         13.33     \nP99 ITL (ms):                            14.01     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:14:21.257340",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 2,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 2 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 141.35,
+      "throughput_req_per_sec": 1.1,
+      "ttft_avg_ms": 73.36,
+      "ttft_p50_ms": 34.36,
+      "ttft_p99_ms": 1730.89,
+      "itl_avg_ms": 13.69,
+      "itl_p50_ms": 13.7,
+      "itl_p99_ms": 14.44,
+      "e2e_latency_avg_ms": 13.68,
+      "e2e_latency_p99_ms": 13.94,
+      "raw_output_tail": "     12800     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              1.10      \nOutput token throughput (tok/s):         141.35    \nPeak output token throughput (tok/s):    148.00    \nPeak concurrent requests:                4.00      \nTotal token throughput (tok/s):          282.71    \n---------------Time to First Token----------------\nMean TTFT (ms):                          73.36     \nMedian TTFT (ms):                        34.36     \nP99 TTFT (ms):                           1730.89   \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.68     \nMedian TPOT (ms):                        13.69     \nP99 TPOT (ms):                           13.94     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.69     \nMedian ITL (ms):                         13.70     \nP99 ITL (ms):                            14.44     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:16:08.785582",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 4,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 4 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 276.61,
+      "throughput_req_per_sec": 2.16,
+      "ttft_avg_ms": 106.5,
+      "ttft_p50_ms": 47.73,
+      "ttft_p99_ms": 912.9,
+      "itl_avg_ms": 13.74,
+      "itl_p50_ms": 13.75,
+      "itl_p99_ms": 14.76,
+      "e2e_latency_avg_ms": 13.73,
+      "e2e_latency_p99_ms": 13.89,
+      "raw_output_tail": "     12800     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              2.16      \nOutput token throughput (tok/s):         276.61    \nPeak output token throughput (tok/s):    292.00    \nPeak concurrent requests:                8.00      \nTotal token throughput (tok/s):          553.22    \n---------------Time to First Token----------------\nMean TTFT (ms):                          106.50    \nMedian TTFT (ms):                        47.73     \nP99 TTFT (ms):                           912.90    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.73     \nMedian TPOT (ms):                        13.74     \nP99 TPOT (ms):                           13.89     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.74     \nMedian ITL (ms):                         13.75     \nP99 ITL (ms):                            14.76     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 19.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:17:10.904635",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 8,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 8 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 524.47,
+      "throughput_req_per_sec": 4.1,
+      "ttft_avg_ms": 128.15,
+      "ttft_p50_ms": 50.03,
+      "ttft_p99_ms": 1040.36,
+      "itl_avg_ms": 13.83,
+      "itl_p50_ms": 13.82,
+      "itl_p99_ms": 14.78,
+      "e2e_latency_avg_ms": 13.8,
+      "e2e_latency_p99_ms": 13.96,
+      "raw_output_tail": "     12800     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              4.10      \nOutput token throughput (tok/s):         524.47    \nPeak output token throughput (tok/s):    584.00    \nPeak concurrent requests:                16.00     \nTotal token throughput (tok/s):          1048.95   \n---------------Time to First Token----------------\nMean TTFT (ms):                          128.15    \nMedian TTFT (ms):                        50.03     \nP99 TTFT (ms):                           1040.36   \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.80     \nMedian TPOT (ms):                        13.82     \nP99 TPOT (ms):                           13.96     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.83     \nMedian ITL (ms):                         13.82     \nP99 ITL (ms):                            14.78     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 4.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:17:50.974241",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 16,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 16 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 952.49,
+      "throughput_req_per_sec": 7.44,
+      "ttft_avg_ms": 171.14,
+      "ttft_p50_ms": 56.26,
+      "ttft_p99_ms": 782.77,
+      "itl_avg_ms": 13.9,
+      "itl_p50_ms": 13.86,
+      "itl_p99_ms": 15.6,
+      "e2e_latency_avg_ms": 13.9,
+      "e2e_latency_p99_ms": 14.03,
+      "raw_output_tail": "     12800     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              7.44      \nOutput token throughput (tok/s):         952.49    \nPeak output token throughput (tok/s):    1168.00   \nPeak concurrent requests:                32.00     \nTotal token throughput (tok/s):          1904.97   \n---------------Time to First Token----------------\nMean TTFT (ms):                          171.14    \nMedian TTFT (ms):                        56.26     \nP99 TTFT (ms):                           782.77    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.90     \nMedian TPOT (ms):                        13.90     \nP99 TPOT (ms):                           14.03     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.90     \nMedian ITL (ms):                         13.86     \nP99 ITL (ms):                            15.60     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 4.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 12.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:18:16.449962",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 32,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 32 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1737.46,
+      "throughput_req_per_sec": 13.57,
+      "ttft_avg_ms": 73.76,
+      "ttft_p50_ms": 75.04,
+      "ttft_p99_ms": 85.11,
+      "itl_avg_ms": 14.07,
+      "itl_p50_ms": 14.0,
+      "itl_p99_ms": 16.99,
+      "e2e_latency_avg_ms": 14.07,
+      "e2e_latency_p99_ms": 14.23,
+      "raw_output_tail": "     12800     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              13.57     \nOutput token throughput (tok/s):         1737.46   \nPeak output token throughput (tok/s):    2272.00   \nPeak concurrent requests:                64.00     \nTotal token throughput (tok/s):          3474.93   \n---------------Time to First Token----------------\nMean TTFT (ms):                          73.76     \nMedian TTFT (ms):                        75.04     \nP99 TTFT (ms):                           85.11     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          14.07     \nMedian TPOT (ms):                        14.03     \nP99 TPOT (ms):                           14.23     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           14.07     \nMedian ITL (ms):                         14.00     \nP99 ITL (ms):                            16.99     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:18:44.620213",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "short_prompt",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 64,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 64 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 2353.16,
+      "throughput_req_per_sec": 18.38,
+      "ttft_avg_ms": 621.94,
+      "ttft_p50_ms": 926.16,
+      "ttft_p99_ms": 939.14,
+      "itl_avg_ms": 18.3,
+      "itl_p50_ms": 14.49,
+      "itl_p99_ms": 18.27,
+      "e2e_latency_avg_ms": 18.3,
+      "e2e_latency_p99_ms": 20.59,
+      "raw_output_tail": "     12800     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              18.38     \nOutput token throughput (tok/s):         2353.16   \nPeak output token throughput (tok/s):    4352.00   \nPeak concurrent requests:                99.00     \nTotal token throughput (tok/s):          4706.31   \n---------------Time to First Token----------------\nMean TTFT (ms):                          621.94    \nMedian TTFT (ms):                        926.16    \nP99 TTFT (ms):                           939.14    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          18.30     \nMedian TPOT (ms):                        20.53     \nP99 TPOT (ms):                           20.59     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           18.30     \nMedian ITL (ms):                         14.49     \nP99 ITL (ms):                            18.27     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:19:02.856563",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 1 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 74.08,
+      "throughput_req_per_sec": 0.29,
+      "ttft_avg_ms": 34.51,
+      "ttft_p50_ms": 34.11,
+      "ttft_p99_ms": 37.62,
+      "itl_avg_ms": 13.42,
+      "itl_p50_ms": 13.44,
+      "itl_p99_ms": 14.14,
+      "e2e_latency_avg_ms": 13.41,
+      "e2e_latency_p99_ms": 13.5,
+      "raw_output_tail": "     25600     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              0.29      \nOutput token throughput (tok/s):         74.08     \nPeak output token throughput (tok/s):    76.00     \nPeak concurrent requests:                2.00      \nTotal token throughput (tok/s):          222.25    \n---------------Time to First Token----------------\nMean TTFT (ms):                          34.51     \nMedian TTFT (ms):                        34.11     \nP99 TTFT (ms):                           37.62     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.41     \nMedian TPOT (ms):                        13.43     \nP99 TPOT (ms):                           13.50     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.42     \nMedian ITL (ms):                         13.44     \nP99 ITL (ms):                            14.14     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:22:07.796552",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 2,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 2 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 145.35,
+      "throughput_req_per_sec": 0.57,
+      "ttft_avg_ms": 40.71,
+      "ttft_p50_ms": 36.67,
+      "ttft_p99_ms": 51.85,
+      "itl_avg_ms": 13.66,
+      "itl_p50_ms": 13.65,
+      "itl_p99_ms": 14.36,
+      "e2e_latency_avg_ms": 13.65,
+      "e2e_latency_p99_ms": 13.79,
+      "raw_output_tail": "     25600     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              0.57      \nOutput token throughput (tok/s):         145.35    \nPeak output token throughput (tok/s):    148.00    \nPeak concurrent requests:                4.00      \nTotal token throughput (tok/s):          436.06    \n---------------Time to First Token----------------\nMean TTFT (ms):                          40.71     \nMedian TTFT (ms):                        36.67     \nP99 TTFT (ms):                           51.85     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.65     \nMedian TPOT (ms):                        13.69     \nP99 TPOT (ms):                           13.79     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.66     \nMedian ITL (ms):                         13.65     \nP99 ITL (ms):                            14.36     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:23:51.658014",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 4,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 4 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 277.21,
+      "throughput_req_per_sec": 1.08,
+      "ttft_avg_ms": 48.21,
+      "ttft_p50_ms": 50.54,
+      "ttft_p99_ms": 56.15,
+      "itl_avg_ms": 13.75,
+      "itl_p50_ms": 13.72,
+      "itl_p99_ms": 14.59,
+      "e2e_latency_avg_ms": 13.74,
+      "e2e_latency_p99_ms": 13.86,
+      "raw_output_tail": "     25600     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              1.08      \nOutput token throughput (tok/s):         277.21    \nPeak output token throughput (tok/s):    296.00    \nPeak concurrent requests:                8.00      \nTotal token throughput (tok/s):          831.62    \n---------------Time to First Token----------------\nMean TTFT (ms):                          48.21     \nMedian TTFT (ms):                        50.54     \nP99 TTFT (ms):                           56.15     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.74     \nMedian TPOT (ms):                        13.76     \nP99 TPOT (ms):                           13.86     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.75     \nMedian ITL (ms):                         13.72     \nP99 ITL (ms):                            14.59     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:24:54.593185",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 8,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 8 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 514.84,
+      "throughput_req_per_sec": 2.01,
+      "ttft_avg_ms": 50.95,
+      "ttft_p50_ms": 52.06,
+      "ttft_p99_ms": 57.34,
+      "itl_avg_ms": 13.75,
+      "itl_p50_ms": 13.74,
+      "itl_p99_ms": 14.82,
+      "e2e_latency_avg_ms": 13.75,
+      "e2e_latency_p99_ms": 13.89,
+      "raw_output_tail": "     25600     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              2.01      \nOutput token throughput (tok/s):         514.84    \nPeak output token throughput (tok/s):    592.00    \nPeak concurrent requests:                16.00     \nTotal token throughput (tok/s):          1544.53   \n---------------Time to First Token----------------\nMean TTFT (ms):                          50.95     \nMedian TTFT (ms):                        52.06     \nP99 TTFT (ms):                           57.34     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.75     \nMedian TPOT (ms):                        13.77     \nP99 TPOT (ms):                           13.89     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.75     \nMedian ITL (ms):                         13.74     \nP99 ITL (ms):                            14.82     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:25:35.993865",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 16,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 16 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 897.4,
+      "throughput_req_per_sec": 3.51,
+      "ttft_avg_ms": 73.33,
+      "ttft_p50_ms": 74.34,
+      "ttft_p99_ms": 84.98,
+      "itl_avg_ms": 13.81,
+      "itl_p50_ms": 13.76,
+      "itl_p99_ms": 15.01,
+      "e2e_latency_avg_ms": 13.81,
+      "e2e_latency_p99_ms": 14.03,
+      "raw_output_tail": "     25600     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              3.51      \nOutput token throughput (tok/s):         897.40    \nPeak output token throughput (tok/s):    1168.00   \nPeak concurrent requests:                32.00     \nTotal token throughput (tok/s):          2692.19   \n---------------Time to First Token----------------\nMean TTFT (ms):                          73.33     \nMedian TTFT (ms):                        74.34     \nP99 TTFT (ms):                           84.98     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.81     \nMedian TPOT (ms):                        13.76     \nP99 TPOT (ms):                           14.03     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.81     \nMedian ITL (ms):                         13.76     \nP99 ITL (ms):                            15.01     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:26:02.755751",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 32,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 32 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1734.87,
+      "throughput_req_per_sec": 6.78,
+      "ttft_avg_ms": 104.19,
+      "ttft_p50_ms": 120.21,
+      "ttft_p99_ms": 124.27,
+      "itl_avg_ms": 14.1,
+      "itl_p50_ms": 14.0,
+      "itl_p99_ms": 16.73,
+      "e2e_latency_avg_ms": 14.1,
+      "e2e_latency_p99_ms": 14.21,
+      "raw_output_tail": "     25600     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              6.78      \nOutput token throughput (tok/s):         1734.87   \nPeak output token throughput (tok/s):    2272.00   \nPeak concurrent requests:                50.00     \nTotal token throughput (tok/s):          5204.60   \n---------------Time to First Token----------------\nMean TTFT (ms):                          104.19    \nMedian TTFT (ms):                        120.21    \nP99 TTFT (ms):                           124.27    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          14.10     \nMedian TPOT (ms):                        14.18     \nP99 TPOT (ms):                           14.21     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           14.10     \nMedian ITL (ms):                         14.00     \nP99 ITL (ms):                            16.73     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:26:24.409232",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "medium_prompt",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 64,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 64 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 3320.85,
+      "throughput_req_per_sec": 12.97,
+      "ttft_avg_ms": 152.18,
+      "ttft_p50_ms": 156.8,
+      "ttft_p99_ms": 162.59,
+      "itl_avg_ms": 14.47,
+      "itl_p50_ms": 14.38,
+      "itl_p99_ms": 16.38,
+      "e2e_latency_avg_ms": 14.47,
+      "e2e_latency_p99_ms": 14.52,
+      "raw_output_tail": "     25600     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              12.97     \nOutput token throughput (tok/s):         3320.85   \nPeak output token throughput (tok/s):    3450.00   \nPeak concurrent requests:                50.00     \nTotal token throughput (tok/s):          9962.55   \n---------------Time to First Token----------------\nMean TTFT (ms):                          152.18    \nMedian TTFT (ms):                        156.80    \nP99 TTFT (ms):                           162.59    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          14.47     \nMedian TPOT (ms):                        14.47     \nP99 TPOT (ms):                           14.52     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           14.47     \nMedian ITL (ms):                         14.38     \nP99 ITL (ms):                            16.38     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:26:41.338963",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 1 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 74.28,
+      "throughput_req_per_sec": 0.15,
+      "ttft_avg_ms": 36.08,
+      "ttft_p50_ms": 35.5,
+      "ttft_p99_ms": 40.55,
+      "itl_avg_ms": 13.42,
+      "itl_p50_ms": 13.41,
+      "itl_p99_ms": 14.04,
+      "e2e_latency_avg_ms": 13.42,
+      "e2e_latency_p99_ms": 13.49,
+      "raw_output_tail": "     20480     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              0.15      \nOutput token throughput (tok/s):         74.28     \nPeak output token throughput (tok/s):    76.00     \nPeak concurrent requests:                2.00      \nTotal token throughput (tok/s):          222.83    \n---------------Time to First Token----------------\nMean TTFT (ms):                          36.08     \nMedian TTFT (ms):                        35.50     \nP99 TTFT (ms):                           40.55     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.42     \nMedian TPOT (ms):                        13.44     \nP99 TPOT (ms):                           13.49     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.42     \nMedian ITL (ms):                         13.41     \nP99 ITL (ms):                            14.04     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:29:11.236528",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 2,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 2 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 145.23,
+      "throughput_req_per_sec": 0.28,
+      "ttft_avg_ms": 45.51,
+      "ttft_p50_ms": 42.52,
+      "ttft_p99_ms": 54.68,
+      "itl_avg_ms": 13.71,
+      "itl_p50_ms": 13.69,
+      "itl_p99_ms": 14.4,
+      "e2e_latency_avg_ms": 13.71,
+      "e2e_latency_p99_ms": 13.75,
+      "raw_output_tail": "     20480     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              0.28      \nOutput token throughput (tok/s):         145.23    \nPeak output token throughput (tok/s):    148.00    \nPeak concurrent requests:                4.00      \nTotal token throughput (tok/s):          435.68    \n---------------Time to First Token----------------\nMean TTFT (ms):                          45.51     \nMedian TTFT (ms):                        42.52     \nP99 TTFT (ms):                           54.68     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.71     \nMedian TPOT (ms):                        13.71     \nP99 TPOT (ms):                           13.75     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.71     \nMedian ITL (ms):                         13.69     \nP99 ITL (ms):                            14.40     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:30:36.772332",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 4,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 4 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 288.3,
+      "throughput_req_per_sec": 0.56,
+      "ttft_avg_ms": 51.34,
+      "ttft_p50_ms": 51.06,
+      "ttft_p99_ms": 61.49,
+      "itl_avg_ms": 13.8,
+      "itl_p50_ms": 13.78,
+      "itl_p99_ms": 14.63,
+      "e2e_latency_avg_ms": 13.8,
+      "e2e_latency_p99_ms": 13.84,
+      "raw_output_tail": "     20480     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              0.56      \nOutput token throughput (tok/s):         288.30    \nPeak output token throughput (tok/s):    292.00    \nPeak concurrent requests:                8.00      \nTotal token throughput (tok/s):          864.90    \n---------------Time to First Token----------------\nMean TTFT (ms):                          51.34     \nMedian TTFT (ms):                        51.06     \nP99 TTFT (ms):                           61.49     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.80     \nMedian TPOT (ms):                        13.80     \nP99 TPOT (ms):                           13.84     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.80     \nMedian ITL (ms):                         13.78     \nP99 ITL (ms):                            14.63     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:31:29.153050",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 8,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 8 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 479.26,
+      "throughput_req_per_sec": 0.94,
+      "ttft_avg_ms": 59.54,
+      "ttft_p50_ms": 58.96,
+      "ttft_p99_ms": 78.47,
+      "itl_avg_ms": 13.84,
+      "itl_p50_ms": 13.78,
+      "itl_p99_ms": 14.8,
+      "e2e_latency_avg_ms": 13.84,
+      "e2e_latency_p99_ms": 13.87,
+      "raw_output_tail": "     20480     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              0.94      \nOutput token throughput (tok/s):         479.26    \nPeak output token throughput (tok/s):    584.00    \nPeak concurrent requests:                16.00     \nTotal token throughput (tok/s):          1437.79   \n---------------Time to First Token----------------\nMean TTFT (ms):                          59.54     \nMedian TTFT (ms):                        58.96     \nP99 TTFT (ms):                           78.47     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.84     \nMedian TPOT (ms):                        13.85     \nP99 TPOT (ms):                           13.87     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.84     \nMedian ITL (ms):                         13.78     \nP99 ITL (ms):                            14.80     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:32:03.485424",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 16,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 16 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 713.31,
+      "throughput_req_per_sec": 1.39,
+      "ttft_avg_ms": 91.71,
+      "ttft_p50_ms": 104.7,
+      "ttft_p99_ms": 106.69,
+      "itl_avg_ms": 13.95,
+      "itl_p50_ms": 13.86,
+      "itl_p99_ms": 15.26,
+      "e2e_latency_avg_ms": 13.95,
+      "e2e_latency_p99_ms": 14.01,
+      "raw_output_tail": "     20480     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              1.39      \nOutput token throughput (tok/s):         713.31    \nPeak output token throughput (tok/s):    1152.00   \nPeak concurrent requests:                20.00     \nTotal token throughput (tok/s):          2139.94   \n---------------Time to First Token----------------\nMean TTFT (ms):                          91.71     \nMedian TTFT (ms):                        104.70    \nP99 TTFT (ms):                           106.69    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.95     \nMedian TPOT (ms):                        13.99     \nP99 TPOT (ms):                           14.01     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.95     \nMedian ITL (ms):                         13.86     \nP99 ITL (ms):                            15.26     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:32:32.548485",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 32,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 32 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1405.85,
+      "throughput_req_per_sec": 2.75,
+      "ttft_avg_ms": 126.91,
+      "ttft_p50_ms": 127.98,
+      "ttft_p99_ms": 138.41,
+      "itl_avg_ms": 13.99,
+      "itl_p50_ms": 13.9,
+      "itl_p99_ms": 15.71,
+      "e2e_latency_avg_ms": 13.99,
+      "e2e_latency_p99_ms": 14.02,
+      "raw_output_tail": "     20480     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              2.75      \nOutput token throughput (tok/s):         1405.85   \nPeak output token throughput (tok/s):    1440.00   \nPeak concurrent requests:                20.00     \nTotal token throughput (tok/s):          4217.54   \n---------------Time to First Token----------------\nMean TTFT (ms):                          126.91    \nMedian TTFT (ms):                        127.98    \nP99 TTFT (ms):                           138.41    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.99     \nMedian TPOT (ms):                        13.99     \nP99 TPOT (ms):                           14.02     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.99     \nMedian ITL (ms):                         13.90     \nP99 ITL (ms):                            15.71     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-24T11:32:52.383644",
+    "model_id": "allenai/OLMoE-1B-7B-0924",
+    "strategy": {
+      "name": "baseline_no_ep",
+      "tensor_parallel_size": 1,
+      "enable_expert_parallel": false,
+      "description": "All experts co-located on single GPU"
+    },
+    "workload": {
+      "name": "long_prompt",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 64,
+    "vendor": "nvidia",
+    "server_cmd": "vllm serve allenai/OLMoE-1B-7B-0924 --port 8000 --tensor-parallel-size 1 --max-model-len 4096 --gpu-memory-utilization 0.9 --dtype auto --disable-log-requests --enforce-eager --enable-chunked-prefill",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 64 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1415.08,
+      "throughput_req_per_sec": 2.76,
+      "ttft_avg_ms": 111.93,
+      "ttft_p50_ms": 114.64,
+      "ttft_p99_ms": 122.08,
+      "itl_avg_ms": 13.93,
+      "itl_p50_ms": 13.88,
+      "itl_p99_ms": 15.82,
+      "e2e_latency_avg_ms": 13.93,
+      "e2e_latency_p99_ms": 13.96,
+      "raw_output_tail": "     20480     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              2.76      \nOutput token throughput (tok/s):         1415.08   \nPeak output token throughput (tok/s):    1440.00   \nPeak concurrent requests:                20.00     \nTotal token throughput (tok/s):          4245.23   \n---------------Time to First Token----------------\nMean TTFT (ms):                          111.93    \nMedian TTFT (ms):                        114.64    \nP99 TTFT (ms):                           122.08    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          13.93     \nMedian TPOT (ms):                        13.93     \nP99 TPOT (ms):                           13.96     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           13.93     \nMedian ITL (ms):                         13.88     \nP99 ITL (ms):                            15.82     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 38919.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 1.0,
+          "memory_total_mb": 40960.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  }
+]
