@@ -107,47 +107,17 @@ def wait_for_server(timeout: int = 300, interval: int = 5) -> bool:
     return False
 
 
-def run_single_benchmark(
+def run_bench_against_server(
+    server_cmd_str: str,
     model_id: str,
     strategy: dict[str, Any],
     workload: dict[str, Any],
     concurrency: int,
     vendor: str,
-    env_overrides: dict[str, str],
-    profile: bool = False,
+    env: dict[str, str],
     bench_timeout: int = 600,
 ) -> dict[str, Any]:
-    """Run a single benchmark configuration.
-
-    1. Start vLLM server with given strategy
-    2. Wait for health
-    3. Run vllm bench serve
-    4. Collect metrics
-    5. Kill server
-    6. Return results dict
-    """
-    # Build environment
-    env = os.environ.copy()
-    env.update(env_overrides)
-    if profile:
-        env["VLLM_TORCH_PROFILER_DIR"] = str(
-            RESULTS_DIR / "profiles" / datetime.now().strftime("%Y%m%d_%H%M%S")
-        )
-
-    # Determine parallelism settings
-    tp_size = strategy.get("tensor_parallel_size", 1)
-    dp_size = strategy.get("data_parallel_size", 1)
-    enable_ep = strategy.get("enable_expert_parallel", False)
-    all2all = strategy.get("all2all_backend")
-
-    server_cmd = build_server_cmd(
-        model_id=model_id,
-        tp_size=tp_size,
-        dp_size=dp_size,
-        enable_ep=enable_ep,
-        all2all_backend=all2all,
-    )
-
+    """Run a single benchmark against an already-running server."""
     bench_cmd = build_bench_cmd(
         num_prompts=workload.get("num_prompts", 200),
         input_len=workload.get("input_len", 512),
@@ -162,31 +132,13 @@ def run_single_benchmark(
         "workload": workload,
         "concurrency": concurrency,
         "vendor": vendor,
-        "server_cmd": " ".join(server_cmd),
+        "server_cmd": server_cmd_str,
         "bench_cmd": " ".join(bench_cmd),
     }
 
-    server_proc = None
     try:
-        # Start server
-        print(f"  Starting vLLM server: {' '.join(server_cmd[:6])}...")
-        server_proc = subprocess.Popen(
-            server_cmd,
-            env=env,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
-
-        # Wait for server
-        print("  Waiting for server health...")
-        if not wait_for_server():
-            result["error"] = "Server failed to start within timeout"
-            return result
-
-        # Collect pre-benchmark GPU metrics
         gpu_before = collect_gpu_metrics()
 
-        # Run benchmark
         print(f"  Running benchmark (concurrency={concurrency})...")
         bench_result = subprocess.run(
             bench_cmd,
@@ -196,10 +148,8 @@ def run_single_benchmark(
             timeout=bench_timeout,
         )
 
-        # Collect post-benchmark GPU metrics
         gpu_after = collect_gpu_metrics()
 
-        # Parse results
         if bench_result.returncode == 0:
             metrics = parse_bench_output(bench_result.stdout)
             result["metrics"] = metrics
@@ -216,6 +166,98 @@ def run_single_benchmark(
     except Exception as e:
         result["error"] = str(e)
         result["success"] = False
+
+    return result
+
+
+def run_strategy_benchmarks(
+    model_id: str,
+    strategy: dict[str, Any],
+    runs: list[tuple[dict[str, Any], int]],
+    vendor: str,
+    env_overrides: dict[str, str],
+    profile: bool = False,
+    bench_timeout: int = 600,
+    run_offset: int = 0,
+    total_runs: int = 0,
+) -> list[dict[str, Any]]:
+    """Start one server for a strategy and run all workload/concurrency combos against it."""
+    env = os.environ.copy()
+    env.update(env_overrides)
+    if profile:
+        env["VLLM_TORCH_PROFILER_DIR"] = str(
+            RESULTS_DIR / "profiles" / datetime.now().strftime("%Y%m%d_%H%M%S")
+        )
+
+    tp_size = strategy.get("tensor_parallel_size", 1)
+    dp_size = strategy.get("data_parallel_size", 1)
+    enable_ep = strategy.get("enable_expert_parallel", False)
+    all2all = strategy.get("all2all_backend")
+
+    server_cmd = build_server_cmd(
+        model_id=model_id,
+        tp_size=tp_size,
+        dp_size=dp_size,
+        enable_ep=enable_ep,
+        all2all_backend=all2all,
+    )
+    server_cmd_str = " ".join(server_cmd)
+
+    results = []
+    server_proc = None
+    try:
+        print(f"  Starting vLLM server: {' '.join(server_cmd[:6])}...")
+        server_proc = subprocess.Popen(
+            server_cmd,
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
+
+        print("  Waiting for server health...")
+        if not wait_for_server():
+            error = "Server failed to start within timeout"
+            print(f"  FAILED: {error}")
+            for wl, conc in runs:
+                results.append({
+                    "timestamp": datetime.now().isoformat(),
+                    "model_id": model_id,
+                    "strategy": strategy,
+                    "workload": wl,
+                    "concurrency": conc,
+                    "vendor": vendor,
+                    "server_cmd": server_cmd_str,
+                    "error": error,
+                    "success": False,
+                })
+            return results
+
+        for i, (wl, conc) in enumerate(runs):
+            run_num = run_offset + i + 1
+            print(f"\n--- Run {run_num}/{total_runs} ---")
+            print(f"  Strategy: {strategy['name']}, Workload: {wl['name']}, Concurrency: {conc}")
+
+            result = run_bench_against_server(
+                server_cmd_str=server_cmd_str,
+                model_id=model_id,
+                strategy=strategy,
+                workload=wl,
+                concurrency=conc,
+                vendor=vendor,
+                env=env,
+                bench_timeout=bench_timeout,
+            )
+            results.append(result)
+
+            if result.get("success"):
+                metrics = result.get("metrics", {})
+                print(f"  Throughput: {metrics.get('throughput_tok_per_sec', 'N/A')} tok/s")
+                print(f"  TTFT: {metrics.get('ttft_avg_ms', 'N/A')} ms")
+            else:
+                print(f"  FAILED: {result.get('error', 'unknown')}")
+
+    except Exception as e:
+        print(f"  Server error: {e}")
     finally:
         if server_proc:
             server_proc.send_signal(signal.SIGTERM)
@@ -224,7 +266,7 @@ def run_single_benchmark(
             except subprocess.TimeoutExpired:
                 server_proc.kill()
 
-    return result
+    return results
 
 
 def save_results(results: list[dict], experiment_name: str, model_key: str):
@@ -301,34 +343,28 @@ def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, 
             print(f"  Server: {' '.join(cmd)}")
         return
 
-    # Run experiments
+    # Run experiments — group by strategy to reuse server across workloads/concurrency
     all_results = []
     run_idx = 0
     for strat in strategies:
-        for wl in workloads:
-            for conc in concurrency_levels:
-                run_idx += 1
-                print(f"\n--- Run {run_idx}/{total_runs} ---")
-                print(f"  Strategy: {strat['name']}, Workload: {wl['name']}, Concurrency: {conc}")
+        strat_runs = [(wl, conc) for wl in workloads for conc in concurrency_levels]
+        print(f"\n{'=' * 40}")
+        print(f"Strategy: {strat['name']} ({len(strat_runs)} runs)")
+        print(f"{'=' * 40}")
 
-                result = run_single_benchmark(
-                    model_id=model_id,
-                    strategy=strat,
-                    workload=wl,
-                    concurrency=conc,
-                    vendor=vendor,
-                    env_overrides=env_vars,
-                    profile=profile,
-                    bench_timeout=bench_timeout,
-                )
-                all_results.append(result)
-
-                if result.get("success"):
-                    metrics = result.get("metrics", {})
-                    print(f"  Throughput: {metrics.get('throughput_tok_per_sec', 'N/A')} tok/s")
-                    print(f"  TTFT: {metrics.get('ttft_avg_ms', 'N/A')} ms")
-                else:
-                    print(f"  FAILED: {result.get('error', 'unknown')}")
+        results = run_strategy_benchmarks(
+            model_id=model_id,
+            strategy=strat,
+            runs=strat_runs,
+            vendor=vendor,
+            env_overrides=env_vars,
+            profile=profile,
+            bench_timeout=bench_timeout,
+            run_offset=run_idx,
+            total_runs=total_runs,
+        )
+        all_results.extend(results)
+        run_idx += len(strat_runs)
 
     # Save results
     save_results(all_results, experiment, model)
