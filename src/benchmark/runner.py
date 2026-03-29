@@ -56,7 +56,6 @@ def build_server_cmd(
         "--max-model-len", str(max_model_len),
         "--gpu-memory-utilization", str(gpu_mem_util),
         "--dtype", dtype,
-        "--disable-log-requests",
         "--enforce-eager",
     ]
     if dp_size > 1:
@@ -260,9 +259,13 @@ def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, 
     print("=" * 60)
 
     # Detect GPU
-    vendor = detect_gpu_vendor()
+    try:
+        vendor = detect_gpu_vendor()
+    except RuntimeError:
+        vendor = "unknown"
     print(f"\nGPU Vendor: {vendor.upper()}")
-    print_gpu_summary()
+    if not dry_run:
+        print_gpu_summary()
 
     # Load configs
     model_cfg = get_model_config(model)
@@ -270,7 +273,8 @@ def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, 
     exp = exp_cfg.get("experiment", exp_cfg)
     env_vars = resolve_experiment_env(exp_cfg, vendor)
 
-    model_id = model_cfg["hf_model_id"]
+    _local_path = Path(get_model_dir()) / model
+    model_id = str(_local_path) if _local_path.exists() else model_cfg["hf_model_id"]
     print(f"\nModel: {model_id}")
     print(f"  Total params: {model_cfg['total_params_b']}B")
     print(f"  Active params: {model_cfg['active_params_b']}B")
@@ -294,10 +298,17 @@ def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, 
     print(f"  Concurrency: {concurrency_levels}")
     print(f"  Total runs: {total_runs}")
 
+    # Apply num_gpus to tp_only strategies that don't explicitly set tensor_parallel_size
+    if num_gpus:
+        for strat in strategies:
+            if not strat.get("enable_expert_parallel", False) and "tensor_parallel_size" not in strat:
+                strat["tensor_parallel_size"] = num_gpus
+
     if dry_run:
         print("\n[DRY RUN] Commands that would be executed:")
         for strat in strategies:
-            cmd = build_server_cmd(model_id, tp_size=strat.get("tensor_parallel_size", 1))
+            cmd = build_server_cmd(model_id, tp_size=strat.get("tensor_parallel_size", 1),
+                                   enable_ep=strat.get("enable_expert_parallel", False))
             print(f"  Server: {' '.join(cmd)}")
         return
 
