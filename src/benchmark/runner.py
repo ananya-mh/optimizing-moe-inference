@@ -56,7 +56,6 @@ def build_server_cmd(
         "--max-model-len", str(max_model_len),
         "--gpu-memory-utilization", str(gpu_mem_util),
         "--dtype", dtype,
-        "--disable-log-requests",
         "--enforce-eager",
     ]
     if dp_size > 1:
@@ -101,7 +100,7 @@ def wait_for_server(timeout: int = 300, interval: int = 5) -> bool:
             resp = requests.get(HEALTH_ENDPOINT, timeout=5)
             if resp.status_code == 200:
                 return True
-        except requests.ConnectionError:
+        except requests.RequestException:
             pass
         time.sleep(interval)
     return False
@@ -170,6 +169,66 @@ def run_bench_against_server(
     return result
 
 
+def run_bench_only(
+    model_id: str,
+    strategy: dict[str, Any],
+    runs: list[tuple[dict[str, Any], int]],
+    vendor: str,
+    env_overrides: dict[str, str],
+    bench_timeout: int = 600,
+    run_offset: int = 0,
+    total_runs: int = 0,
+) -> list[dict[str, Any]]:
+    """Run benchmarks against an already-running vLLM server."""
+    env = os.environ.copy()
+    env.update(env_overrides)
+
+    server_cmd_str = "external (--server-running)"
+
+    print("  Checking server health...")
+    if not wait_for_server(timeout=30):
+        print("  FAILED: Server not reachable on port 8000. Is it running?")
+        return [{
+            "timestamp": datetime.now().isoformat(),
+            "model_id": model_id,
+            "strategy": strategy,
+            "workload": wl,
+            "concurrency": conc,
+            "vendor": vendor,
+            "server_cmd": server_cmd_str,
+            "error": "Server not reachable",
+            "success": False,
+        } for wl, conc in runs]
+
+    print("  Server is healthy!")
+    results = []
+    for i, (wl, conc) in enumerate(runs):
+        run_num = run_offset + i + 1
+        print(f"\n--- Run {run_num}/{total_runs} ---")
+        print(f"  Strategy: {strategy['name']}, Workload: {wl['name']}, Concurrency: {conc}")
+
+        result = run_bench_against_server(
+            server_cmd_str=server_cmd_str,
+            model_id=model_id,
+            strategy=strategy,
+            workload=wl,
+            concurrency=conc,
+            vendor=vendor,
+            env=env,
+            bench_timeout=bench_timeout,
+        )
+        results.append(result)
+
+        if result.get("success"):
+            metrics = result.get("metrics", {})
+            print(f"  Throughput: {metrics.get('throughput_tok_per_sec', 'N/A')} tok/s")
+            print(f"  TTFT: {metrics.get('ttft_avg_ms', 'N/A')} ms")
+        else:
+            print(f"  FAILED: {result.get('error', 'unknown')}")
+
+    return results
+
+
 def run_strategy_benchmarks(
     model_id: str,
     strategy: dict[str, Any],
@@ -218,6 +277,12 @@ def run_strategy_benchmarks(
         if not wait_for_server():
             error = "Server failed to start within timeout"
             print(f"  FAILED: {error}")
+            if server_proc.poll() is not None:
+                stdout = server_proc.stdout.read().decode() if server_proc.stdout else ""
+                print(f"  Server exited with code {server_proc.returncode}")
+                print(f"  Server output (last 2000 chars):\n{stdout[-2000:]}")
+            else:
+                print("  Server process is still running but not responding on health endpoint")
             for wl, conc in runs:
                 results.append({
                     "timestamp": datetime.now().isoformat(),
@@ -291,7 +356,8 @@ def save_results(results: list[dict], experiment_name: str, model_key: str):
 @click.option("--profile", is_flag=True, help="Enable torch profiler")
 @click.option("--dry-run", is_flag=True, help="Print commands without executing")
 @click.option("--bench-timeout", "-t", default=600, type=int, help="Benchmark subprocess timeout in seconds (default 600)")
-def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, dry_run, bench_timeout):
+@click.option("--server-running", is_flag=True, help="Skip server management; assume vLLM server is already running on the port")
+def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, dry_run, bench_timeout, server_running):
     """MoE Inference Benchmark Runner.
 
     Runs systematic benchmarks across models, placement strategies,
@@ -343,6 +409,17 @@ def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, 
             print(f"  Server: {' '.join(cmd)}")
         return
 
+    # Apply num_gpus to strategies that don't specify tensor_parallel_size
+    if num_gpus:
+        for strat in strategies:
+            if strat["name"] == "tp_only":
+                strat["tensor_parallel_size"] = num_gpus
+            elif strat["name"] == "ep_only":
+                strat["tensor_parallel_size"] = 1
+            elif strat["name"] == "tp_ep_hybrid":
+                strat["tensor_parallel_size"] = max(1, num_gpus // 2)
+        print(f"  GPUs: {num_gpus}")
+
     # Run experiments — group by strategy to reuse server across workloads/concurrency
     all_results = []
     run_idx = 0
@@ -352,17 +429,29 @@ def main(model, experiment, num_gpus, concurrency, workload, strategy, profile, 
         print(f"Strategy: {strat['name']} ({len(strat_runs)} runs)")
         print(f"{'=' * 40}")
 
-        results = run_strategy_benchmarks(
-            model_id=model_id,
-            strategy=strat,
-            runs=strat_runs,
-            vendor=vendor,
-            env_overrides=env_vars,
-            profile=profile,
-            bench_timeout=bench_timeout,
-            run_offset=run_idx,
-            total_runs=total_runs,
-        )
+        if server_running:
+            results = run_bench_only(
+                model_id=model_id,
+                strategy=strat,
+                runs=strat_runs,
+                vendor=vendor,
+                env_overrides=env_vars,
+                bench_timeout=bench_timeout,
+                run_offset=run_idx,
+                total_runs=total_runs,
+            )
+        else:
+            results = run_strategy_benchmarks(
+                model_id=model_id,
+                strategy=strat,
+                runs=strat_runs,
+                vendor=vendor,
+                env_overrides=env_vars,
+                profile=profile,
+                bench_timeout=bench_timeout,
+                run_offset=run_idx,
+                total_runs=total_runs,
+            )
         all_results.extend(results)
         run_idx += len(strat_runs)
 
