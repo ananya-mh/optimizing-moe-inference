@@ -98,7 +98,7 @@ def wait_for_server(timeout: int = 300, interval: int = 5) -> bool:
     while time.time() - start < timeout:
         try:
             resp = requests.get(HEALTH_ENDPOINT, timeout=5)
-            if resp.status_code == 200:
+            if resp.status_code in (200, 401):
                 return True
         except requests.RequestException:
             pass
