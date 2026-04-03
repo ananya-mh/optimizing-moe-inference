@@ -1,0 +1,1451 @@
+[
+  {
+    "timestamp": "2026-03-31T22:23:22.544640",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "decode_heavy",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 1 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 97.52,
+      "throughput_req_per_sec": 0.76,
+      "ttft_avg_ms": 32.59,
+      "ttft_p50_ms": 32.69,
+      "ttft_p99_ms": 36.48,
+      "itl_avg_ms": 10.08,
+      "itl_p50_ms": 10.07,
+      "itl_p99_ms": 10.44,
+      "e2e_latency_avg_ms": 10.08,
+      "e2e_latency_p99_ms": 10.12,
+      "raw_output_tail": "     12700     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              0.76      \nOutput token throughput (tok/s):         97.52     \nPeak output token throughput (tok/s):    100.00    \nPeak concurrent requests:                2.00      \nTotal token throughput (tok/s):          194.28    \n---------------Time to First Token----------------\nMean TTFT (ms):                          32.59     \nMedian TTFT (ms):                        32.69     \nP99 TTFT (ms):                           36.48     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          10.08     \nMedian TPOT (ms):                        10.08     \nP99 TPOT (ms):                           10.12     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           10.08     \nMedian ITL (ms):                         10.07     \nP99 ITL (ms):                            10.44     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:25:41.461289",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "decode_heavy",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 4,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 4 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 201.71,
+      "throughput_req_per_sec": 1.58,
+      "ttft_avg_ms": 65.55,
+      "ttft_p50_ms": 66.06,
+      "ttft_p99_ms": 71.01,
+      "itl_avg_ms": 19.47,
+      "itl_p50_ms": 19.45,
+      "itl_p99_ms": 21.9,
+      "e2e_latency_avg_ms": 19.47,
+      "e2e_latency_p99_ms": 20.71,
+      "raw_output_tail": "     12700     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              1.58      \nOutput token throughput (tok/s):         201.71    \nPeak output token throughput (tok/s):    216.00    \nPeak concurrent requests:                8.00      \nTotal token throughput (tok/s):          401.84    \n---------------Time to First Token----------------\nMean TTFT (ms):                          65.55     \nMedian TTFT (ms):                        66.06     \nP99 TTFT (ms):                           71.01     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          19.47     \nMedian TPOT (ms):                        19.44     \nP99 TPOT (ms):                           20.71     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           19.47     \nMedian ITL (ms):                         19.45     \nP99 ITL (ms):                            21.90     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:26:54.019767",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "decode_heavy",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 8,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 8 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 312.75,
+      "throughput_req_per_sec": 2.44,
+      "ttft_avg_ms": 68.96,
+      "ttft_p50_ms": 67.41,
+      "ttft_p99_ms": 84.35,
+      "itl_avg_ms": 24.41,
+      "itl_p50_ms": 24.62,
+      "itl_p99_ms": 26.98,
+      "e2e_latency_avg_ms": 24.41,
+      "e2e_latency_p99_ms": 25.63,
+      "raw_output_tail": "     12700     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              2.44      \nOutput token throughput (tok/s):         312.75    \nPeak output token throughput (tok/s):    344.00    \nPeak concurrent requests:                16.00     \nTotal token throughput (tok/s):          623.05    \n---------------Time to First Token----------------\nMean TTFT (ms):                          68.96     \nMedian TTFT (ms):                        67.41     \nP99 TTFT (ms):                           84.35     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          24.41     \nMedian TPOT (ms):                        24.55     \nP99 TPOT (ms):                           25.63     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           24.41     \nMedian ITL (ms):                         24.62     \nP99 ITL (ms):                            26.98     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:27:42.850425",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "decode_heavy",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 16,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 16 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 530.89,
+      "throughput_req_per_sec": 4.15,
+      "ttft_avg_ms": 77.55,
+      "ttft_p50_ms": 73.7,
+      "ttft_p99_ms": 99.7,
+      "itl_avg_ms": 27.32,
+      "itl_p50_ms": 27.66,
+      "itl_p99_ms": 29.93,
+      "e2e_latency_avg_ms": 27.32,
+      "e2e_latency_p99_ms": 28.05,
+      "raw_output_tail": "     12700     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              4.15      \nOutput token throughput (tok/s):         530.89    \nPeak output token throughput (tok/s):    592.00    \nPeak concurrent requests:                32.00     \nTotal token throughput (tok/s):          1057.64   \n---------------Time to First Token----------------\nMean TTFT (ms):                          77.55     \nMedian TTFT (ms):                        73.70     \nP99 TTFT (ms):                           99.70     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          27.32     \nMedian TPOT (ms):                        27.64     \nP99 TPOT (ms):                           28.05     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           27.32     \nMedian ITL (ms):                         27.66     \nP99 ITL (ms):                            29.93     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:28:14.910340",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "decode_heavy",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 32,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 32 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 874.48,
+      "throughput_req_per_sec": 6.83,
+      "ttft_avg_ms": 113.42,
+      "ttft_p50_ms": 117.13,
+      "ttft_p99_ms": 144.47,
+      "itl_avg_ms": 30.38,
+      "itl_p50_ms": 30.83,
+      "itl_p99_ms": 32.41,
+      "e2e_latency_avg_ms": 30.38,
+      "e2e_latency_p99_ms": 31.06,
+      "raw_output_tail": "     12700     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              6.83      \nOutput token throughput (tok/s):         874.48    \nPeak output token throughput (tok/s):    1056.00   \nPeak concurrent requests:                63.00     \nTotal token throughput (tok/s):          1742.13   \n---------------Time to First Token----------------\nMean TTFT (ms):                          113.42    \nMedian TTFT (ms):                        117.13    \nP99 TTFT (ms):                           144.47    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          30.38     \nMedian TPOT (ms):                        30.88     \nP99 TPOT (ms):                           31.06     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           30.38     \nMedian ITL (ms):                         30.83     \nP99 ITL (ms):                            32.41     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 3.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:28:37.539088",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "decode_heavy",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 64,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 64 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1482.13,
+      "throughput_req_per_sec": 11.58,
+      "ttft_avg_ms": 170.25,
+      "ttft_p50_ms": 171.51,
+      "ttft_p99_ms": 230.79,
+      "itl_avg_ms": 32.65,
+      "itl_p50_ms": 32.53,
+      "itl_p99_ms": 36.36,
+      "e2e_latency_avg_ms": 32.65,
+      "e2e_latency_p99_ms": 33.09,
+      "raw_output_tail": "     12700     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              11.58     \nOutput token throughput (tok/s):         1482.13   \nPeak output token throughput (tok/s):    1984.00   \nPeak concurrent requests:                100.00    \nTotal token throughput (tok/s):          2952.69   \n---------------Time to First Token----------------\nMean TTFT (ms):                          170.25    \nMedian TTFT (ms):                        171.51    \nP99 TTFT (ms):                           230.79    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          32.65     \nMedian TPOT (ms):                        32.60     \nP99 TPOT (ms):                           33.09     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           32.65     \nMedian ITL (ms):                         32.53     \nP99 ITL (ms):                            36.36     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 3.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:28:59.357064",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "decode_heavy",
+      "num_prompts": 100,
+      "input_len": 128,
+      "output_len": 128
+    },
+    "concurrency": 128,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 100 --random-input-len 128 --random-output-len 128 --max-concurrency 128 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 2809.53,
+      "throughput_req_per_sec": 21.95,
+      "ttft_avg_ms": 280.47,
+      "ttft_p50_ms": 312.8,
+      "ttft_p99_ms": 320.33,
+      "itl_avg_ms": 33.49,
+      "itl_p50_ms": 33.3,
+      "itl_p99_ms": 34.87,
+      "e2e_latency_avg_ms": 33.49,
+      "e2e_latency_p99_ms": 34.14,
+      "raw_output_tail": "     12700     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              21.95     \nOutput token throughput (tok/s):         2809.53   \nPeak output token throughput (tok/s):    3000.00   \nPeak concurrent requests:                100.00    \nTotal token throughput (tok/s):          5597.12   \n---------------Time to First Token----------------\nMean TTFT (ms):                          280.47    \nMedian TTFT (ms):                        312.80    \nP99 TTFT (ms):                           320.33    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          33.49     \nMedian TPOT (ms):                        33.31     \nP99 TPOT (ms):                           34.14     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           33.49     \nMedian ITL (ms):                         33.30     \nP99 ITL (ms):                            34.87     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:29:11.982089",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "prefill_heavy",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 1 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 98.23,
+      "throughput_req_per_sec": 0.38,
+      "ttft_avg_ms": 34.85,
+      "ttft_p50_ms": 34.64,
+      "ttft_p99_ms": 38.84,
+      "itl_avg_ms": 10.08,
+      "itl_p50_ms": 10.08,
+      "itl_p99_ms": 10.35,
+      "e2e_latency_avg_ms": 10.08,
+      "e2e_latency_p99_ms": 10.1,
+      "raw_output_tail": "     25550     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              0.38      \nOutput token throughput (tok/s):         98.23     \nPeak output token throughput (tok/s):    100.00    \nPeak concurrent requests:                2.00      \nTotal token throughput (tok/s):          294.30    \n---------------Time to First Token----------------\nMean TTFT (ms):                          34.85     \nMedian TTFT (ms):                        34.64     \nP99 TTFT (ms):                           38.84     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          10.08     \nMedian TPOT (ms):                        10.08     \nP99 TPOT (ms):                           10.10     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           10.08     \nMedian ITL (ms):                         10.08     \nP99 ITL (ms):                            10.35     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 17.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:31:30.254095",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "prefill_heavy",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 4,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 4 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 195.89,
+      "throughput_req_per_sec": 0.77,
+      "ttft_avg_ms": 73.49,
+      "ttft_p50_ms": 70.02,
+      "ttft_p99_ms": 100.07,
+      "itl_avg_ms": 19.63,
+      "itl_p50_ms": 19.84,
+      "itl_p99_ms": 22.04,
+      "e2e_latency_avg_ms": 19.63,
+      "e2e_latency_p99_ms": 20.53,
+      "raw_output_tail": "     25550     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              0.77      \nOutput token throughput (tok/s):         195.89    \nPeak output token throughput (tok/s):    212.00    \nPeak concurrent requests:                8.00      \nTotal token throughput (tok/s):          586.90    \n---------------Time to First Token----------------\nMean TTFT (ms):                          73.49     \nMedian TTFT (ms):                        70.02     \nP99 TTFT (ms):                           100.07    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          19.63     \nMedian TPOT (ms):                        19.88     \nP99 TPOT (ms):                           20.53     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           19.63     \nMedian ITL (ms):                         19.84     \nP99 ITL (ms):                            22.04     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 17.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:32:43.950783",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "prefill_heavy",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 8,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 8 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 302.76,
+      "throughput_req_per_sec": 1.18,
+      "ttft_avg_ms": 72.86,
+      "ttft_p50_ms": 71.06,
+      "ttft_p99_ms": 85.91,
+      "itl_avg_ms": 24.48,
+      "itl_p50_ms": 24.87,
+      "itl_p99_ms": 27.12,
+      "e2e_latency_avg_ms": 24.48,
+      "e2e_latency_p99_ms": 25.82,
+      "raw_output_tail": "     25550     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              1.18      \nOutput token throughput (tok/s):         302.76    \nPeak output token throughput (tok/s):    336.00    \nPeak concurrent requests:                16.00     \nTotal token throughput (tok/s):          907.10    \n---------------Time to First Token----------------\nMean TTFT (ms):                          72.86     \nMedian TTFT (ms):                        71.06     \nP99 TTFT (ms):                           85.91     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          24.48     \nMedian TPOT (ms):                        24.64     \nP99 TPOT (ms):                           25.82     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           24.48     \nMedian ITL (ms):                         24.87     \nP99 ITL (ms):                            27.12     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 20.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:33:35.468938",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "prefill_heavy",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 16,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 16 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 497.14,
+      "throughput_req_per_sec": 1.94,
+      "ttft_avg_ms": 95.62,
+      "ttft_p50_ms": 98.41,
+      "ttft_p99_ms": 105.44,
+      "itl_avg_ms": 27.75,
+      "itl_p50_ms": 28.39,
+      "itl_p99_ms": 29.44,
+      "e2e_latency_avg_ms": 27.75,
+      "e2e_latency_p99_ms": 28.6,
+      "raw_output_tail": "     25550     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              1.94      \nOutput token throughput (tok/s):         497.14    \nPeak output token throughput (tok/s):    592.00    \nPeak concurrent requests:                32.00     \nTotal token throughput (tok/s):          1489.48   \n---------------Time to First Token----------------\nMean TTFT (ms):                          95.62     \nMedian TTFT (ms):                        98.41     \nP99 TTFT (ms):                           105.44    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          27.75     \nMedian TPOT (ms):                        28.35     \nP99 TPOT (ms):                           28.60     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           27.75     \nMedian ITL (ms):                         28.39     \nP99 ITL (ms):                            29.44     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:34:09.796224",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "prefill_heavy",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 32,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 32 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 808.81,
+      "throughput_req_per_sec": 3.16,
+      "ttft_avg_ms": 118.89,
+      "ttft_p50_ms": 114.17,
+      "ttft_p99_ms": 158.82,
+      "itl_avg_ms": 30.81,
+      "itl_p50_ms": 31.19,
+      "itl_p99_ms": 32.18,
+      "e2e_latency_avg_ms": 30.81,
+      "e2e_latency_p99_ms": 31.48,
+      "raw_output_tail": "     25550     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              3.16      \nOutput token throughput (tok/s):         808.81    \nPeak output token throughput (tok/s):    1024.00   \nPeak concurrent requests:                50.00     \nTotal token throughput (tok/s):          2423.27   \n---------------Time to First Token----------------\nMean TTFT (ms):                          118.89    \nMedian TTFT (ms):                        114.17    \nP99 TTFT (ms):                           158.82    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          30.81     \nMedian TPOT (ms):                        31.42     \nP99 TPOT (ms):                           31.48     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           30.81     \nMedian ITL (ms):                         31.19     \nP99 ITL (ms):                            32.18     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 5.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:34:33.948782",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "prefill_heavy",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 64,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 64 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1518.27,
+      "throughput_req_per_sec": 5.93,
+      "ttft_avg_ms": 206.78,
+      "ttft_p50_ms": 228.15,
+      "ttft_p99_ms": 231.93,
+      "itl_avg_ms": 32.17,
+      "itl_p50_ms": 32.16,
+      "itl_p99_ms": 33.18,
+      "e2e_latency_avg_ms": 32.17,
+      "e2e_latency_p99_ms": 32.3,
+      "raw_output_tail": "     25550     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              5.93      \nOutput token throughput (tok/s):         1518.27   \nPeak output token throughput (tok/s):    1550.00   \nPeak concurrent requests:                50.00     \nTotal token throughput (tok/s):          4548.86   \n---------------Time to First Token----------------\nMean TTFT (ms):                          206.78    \nMedian TTFT (ms):                        228.15    \nP99 TTFT (ms):                           231.93    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          32.17     \nMedian TPOT (ms):                        32.14     \nP99 TPOT (ms):                           32.30     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           32.17     \nMedian ITL (ms):                         32.16     \nP99 ITL (ms):                            33.18     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:34:50.712666",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "prefill_heavy",
+      "num_prompts": 50,
+      "input_len": 512,
+      "output_len": 256
+    },
+    "concurrency": 128,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 50 --random-input-len 512 --random-output-len 256 --max-concurrency 128 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 1522.04,
+      "throughput_req_per_sec": 5.95,
+      "ttft_avg_ms": 211.26,
+      "ttft_p50_ms": 216.53,
+      "ttft_p99_ms": 220.73,
+      "itl_avg_ms": 32.11,
+      "itl_p50_ms": 32.14,
+      "itl_p99_ms": 33.28,
+      "e2e_latency_avg_ms": 32.11,
+      "e2e_latency_p99_ms": 32.2,
+      "raw_output_tail": "     25550     \nTotal generated tokens:                  12800     \nRequest throughput (req/s):              5.95      \nOutput token throughput (tok/s):         1522.04   \nPeak output token throughput (tok/s):    1600.00   \nPeak concurrent requests:                50.00     \nTotal token throughput (tok/s):          4560.19   \n---------------Time to First Token----------------\nMean TTFT (ms):                          211.26    \nMedian TTFT (ms):                        216.53    \nP99 TTFT (ms):                           220.73    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          32.11     \nMedian TPOT (ms):                        32.11     \nP99 TPOT (ms):                           32.20     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           32.11     \nMedian ITL (ms):                         32.14     \nP99 ITL (ms):                            33.28     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:35:07.663457",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "balanced",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 1,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 1 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 98.52,
+      "throughput_req_per_sec": 0.19,
+      "ttft_avg_ms": 36.39,
+      "ttft_p50_ms": 36.66,
+      "ttft_p99_ms": 40.37,
+      "itl_avg_ms": 10.1,
+      "itl_p50_ms": 10.1,
+      "itl_p99_ms": 10.32,
+      "e2e_latency_avg_ms": 10.1,
+      "e2e_latency_p99_ms": 10.11,
+      "raw_output_tail": "     20460     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              0.19      \nOutput token throughput (tok/s):         98.52     \nPeak output token throughput (tok/s):    100.00    \nPeak concurrent requests:                2.00      \nTotal token throughput (tok/s):          295.38    \n---------------Time to First Token----------------\nMean TTFT (ms):                          36.39     \nMedian TTFT (ms):                        36.66     \nP99 TTFT (ms):                           40.37     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          10.10     \nMedian TPOT (ms):                        10.10     \nP99 TPOT (ms):                           10.11     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           10.10     \nMedian ITL (ms):                         10.10     \nP99 ITL (ms):                            10.32     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 20.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:36:59.464409",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "balanced",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 4,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 4 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 194.88,
+      "throughput_req_per_sec": 0.38,
+      "ttft_avg_ms": 78.89,
+      "ttft_p50_ms": 81.43,
+      "ttft_p99_ms": 108.1,
+      "itl_avg_ms": 20.41,
+      "itl_p50_ms": 20.43,
+      "itl_p99_ms": 22.64,
+      "e2e_latency_avg_ms": 20.41,
+      "e2e_latency_p99_ms": 20.84,
+      "raw_output_tail": "     20460     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              0.38      \nOutput token throughput (tok/s):         194.88    \nPeak output token throughput (tok/s):    208.00    \nPeak concurrent requests:                8.00      \nTotal token throughput (tok/s):          584.26    \n---------------Time to First Token----------------\nMean TTFT (ms):                          78.89     \nMedian TTFT (ms):                        81.43     \nP99 TTFT (ms):                           108.10    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          20.41     \nMedian TPOT (ms):                        20.50     \nP99 TPOT (ms):                           20.84     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           20.41     \nMedian ITL (ms):                         20.43     \nP99 ITL (ms):                            22.64     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:38:00.848677",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "balanced",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 8,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 8 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 279.88,
+      "throughput_req_per_sec": 0.55,
+      "ttft_avg_ms": 79.43,
+      "ttft_p50_ms": 74.13,
+      "ttft_p99_ms": 95.68,
+      "itl_avg_ms": 24.29,
+      "itl_p50_ms": 24.93,
+      "itl_p99_ms": 27.0,
+      "e2e_latency_avg_ms": 24.29,
+      "e2e_latency_p99_ms": 25.24,
+      "raw_output_tail": "     20460     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              0.55      \nOutput token throughput (tok/s):         279.88    \nPeak output token throughput (tok/s):    336.00    \nPeak concurrent requests:                16.00     \nTotal token throughput (tok/s):          839.10    \n---------------Time to First Token----------------\nMean TTFT (ms):                          79.43     \nMedian TTFT (ms):                        74.13     \nP99 TTFT (ms):                           95.68     \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          24.29     \nMedian TPOT (ms):                        25.09     \nP99 TPOT (ms):                           25.24     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           24.29     \nMedian ITL (ms):                         24.93     \nP99 ITL (ms):                            27.00     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 15.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:38:45.353371",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "balanced",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 16,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 16 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 402.86,
+      "throughput_req_per_sec": 0.79,
+      "ttft_avg_ms": 97.68,
+      "ttft_p50_ms": 107.89,
+      "ttft_p99_ms": 109.99,
+      "itl_avg_ms": 27.07,
+      "itl_p50_ms": 28.61,
+      "itl_p99_ms": 29.75,
+      "e2e_latency_avg_ms": 27.07,
+      "e2e_latency_p99_ms": 28.66,
+      "raw_output_tail": "     20460     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              0.79      \nOutput token throughput (tok/s):         402.86    \nPeak output token throughput (tok/s):    576.00    \nPeak concurrent requests:                20.00     \nTotal token throughput (tok/s):          1207.78   \n---------------Time to First Token----------------\nMean TTFT (ms):                          97.68     \nMedian TTFT (ms):                        107.89    \nP99 TTFT (ms):                           109.99    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          27.07     \nMedian TPOT (ms):                        28.65     \nP99 TPOT (ms):                           28.66     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           27.07     \nMedian ITL (ms):                         28.61     \nP99 ITL (ms):                            29.75     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:39:20.016656",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "balanced",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 32,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 32 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 658.34,
+      "throughput_req_per_sec": 1.29,
+      "ttft_avg_ms": 122.95,
+      "ttft_p50_ms": 141.04,
+      "ttft_p99_ms": 142.51,
+      "itl_avg_ms": 30.16,
+      "itl_p50_ms": 30.18,
+      "itl_p99_ms": 30.84,
+      "e2e_latency_avg_ms": 30.16,
+      "e2e_latency_p99_ms": 30.18,
+      "raw_output_tail": "     20460     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              1.29      \nOutput token throughput (tok/s):         658.34    \nPeak output token throughput (tok/s):    680.00    \nPeak concurrent requests:                20.00     \nTotal token throughput (tok/s):          1973.72   \n---------------Time to First Token----------------\nMean TTFT (ms):                          122.95    \nMedian TTFT (ms):                        141.04    \nP99 TTFT (ms):                           142.51    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          30.16     \nMedian TPOT (ms):                        30.16     \nP99 TPOT (ms):                           30.18     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           30.16     \nMedian ITL (ms):                         30.18     \nP99 ITL (ms):                            30.84     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 9.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:39:44.327921",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "balanced",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 64,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 64 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 658.16,
+      "throughput_req_per_sec": 1.29,
+      "ttft_avg_ms": 130.88,
+      "ttft_p50_ms": 144.27,
+      "ttft_p99_ms": 145.69,
+      "itl_avg_ms": 30.17,
+      "itl_p50_ms": 30.2,
+      "itl_p99_ms": 30.85,
+      "e2e_latency_avg_ms": 30.17,
+      "e2e_latency_p99_ms": 30.19,
+      "raw_output_tail": "     20460     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              1.29      \nOutput token throughput (tok/s):         658.16    \nPeak output token throughput (tok/s):    680.00    \nPeak concurrent requests:                20.00     \nTotal token throughput (tok/s):          1973.18   \n---------------Time to First Token----------------\nMean TTFT (ms):                          130.88    \nMedian TTFT (ms):                        144.27    \nP99 TTFT (ms):                           145.69    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          30.17     \nMedian TPOT (ms):                        30.16     \nP99 TPOT (ms):                           30.19     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           30.17     \nMedian ITL (ms):                         30.20     \nP99 ITL (ms):                            30.85     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  },
+  {
+    "timestamp": "2026-03-31T22:40:07.907646",
+    "model_id": "mistralai/Mixtral-8x7B-Instruct-v0.1",
+    "strategy": {
+      "name": "tp_ep_hybrid",
+      "enable_expert_parallel": true,
+      "tensor_parallel_size": 1,
+      "all2all_backend": "allgather_reducescatter",
+      "description": "Hybrid TP+EP: TP for attention, EP for MoE layers"
+    },
+    "workload": {
+      "name": "balanced",
+      "num_prompts": 20,
+      "input_len": 1024,
+      "output_len": 512
+    },
+    "concurrency": 128,
+    "vendor": "nvidia",
+    "server_cmd": "external (--server-running)",
+    "bench_cmd": "vllm bench serve --dataset-name random --endpoint /v1/completions --num-prompts 20 --random-input-len 1024 --random-output-len 512 --max-concurrency 128 --port 8000",
+    "metrics": {
+      "throughput_tok_per_sec": 659.34,
+      "throughput_req_per_sec": 1.29,
+      "ttft_avg_ms": 130.24,
+      "ttft_p50_ms": 121.21,
+      "ttft_p99_ms": 153.71,
+      "itl_avg_ms": 30.09,
+      "itl_p50_ms": 30.13,
+      "itl_p99_ms": 31.18,
+      "e2e_latency_avg_ms": 30.09,
+      "e2e_latency_p99_ms": 30.1,
+      "raw_output_tail": "     20460     \nTotal generated tokens:                  10240     \nRequest throughput (req/s):              1.29      \nOutput token throughput (tok/s):         659.34    \nPeak output token throughput (tok/s):    680.00    \nPeak concurrent requests:                20.00     \nTotal token throughput (tok/s):          1976.74   \n---------------Time to First Token----------------\nMean TTFT (ms):                          130.24    \nMedian TTFT (ms):                        121.21    \nP99 TTFT (ms):                           153.71    \n-----Time per Output Token (excl. 1st token)------\nMean TPOT (ms):                          30.09     \nMedian TPOT (ms):                        30.10     \nP99 TPOT (ms):                           30.10     \n---------------Inter-token Latency----------------\nMean ITL (ms):                           30.09     \nMedian ITL (ms):                         30.13     \nP99 ITL (ms):                            31.18     \n==================================================\n"
+    },
+    "gpu_before": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "gpu_after": {
+      "vendor": "nvidia",
+      "gpus": [
+        {
+          "index": 0,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        },
+        {
+          "index": 1,
+          "memory_used_mb": 74687.0,
+          "memory_total_mb": 81920.0,
+          "utilization_pct": 0.0
+        }
+      ]
+    },
+    "success": true
+  }
+]
