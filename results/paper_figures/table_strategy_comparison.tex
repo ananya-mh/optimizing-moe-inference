@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\caption{Multi-GPU placement strategy comparison (balanced workload, averaged across concurrency levels).}
+\label{tab:strategy-comparison}
+\small
+\begin{tabular}{llrrrrrr}
+\toprule
+Model & Strategy & GPUs & Tput$_{\text{avg}}$ & Tput$_{\text{max}}$ & TTFT & ITL & Mem \\
+ & & & (tok/s) & (tok/s) & (ms) & (ms) & (GB) \\
+\midrule
+  Mixtral-8x7B & EP-only (2 GPU) & 2 & 366 & 610 & 142.6 & 30.7 & 73.0 \\
+   & TP+EP Hybrid (4 GPU) & 4 & 231 & 354 & 456.2 & 45.6 & 36.3 \\
+   & TP-only (2 GPU) & 2 & 421 & 661 & 100.9 & 24.7 & 72.9 \\
+\midrule
+  OLMoE-1B-7B & EP-only (2 GPU) & 2 & 581 & 1003 & 88.9 & 19.6 & 73.0 \\
+   & TP+EP Hybrid (4 GPU) & 4 & 462 & 789 & 231.8 & 24.5 & 36.3 \\
+   & TP-only (2 GPU) & 2 & 618 & 1060 & 92.5 & 18.5 & 73.0 \\
+\midrule
+  Qwen-MoE-A2.7B & EP-only (2 GPU) & 2 & 415 & 707 & 114.3 & 27.7 & 73.1 \\
+   & TP+EP Hybrid (4 GPU) & 4 & 330 & 562 & 257.8 & 34.6 & 36.5 \\
+   & TP-only (2 GPU) & 2 & 431 & 740 & 106.2 & 26.9 & 72.4 \\
+\bottomrule
+\end{tabular}
+\end{table}
