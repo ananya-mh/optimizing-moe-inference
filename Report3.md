@@ -81,6 +81,12 @@ attention using the split send/recv APIs. Report traffic reduction and accuracy 
 **C5 — TPF-aware long-context scheduling (should-have).** Choose block size / confidence threshold per
 request based on context length (larger commits when KV reads dominate), on top of FDFO batching.
 
+**C6 — Multi-node profiling methodology and tooling (must-have).** A cross-node, cross-layer
+profiling pipeline for dLLM + MoE inference on AMD clusters: application step markers, GPU kernel and
+RCCL traces, MoRI device-side (warp-level) traces, and NIC/fabric counters, merged into one
+clock-aligned timeline per experiment. It produces the step-time breakdown for C1, exposes stragglers
+and un-overlapped communication, and is released as an artifact (details in Section 6.1).
+
 **Stretch — Saliency-guided KV tiering** (HBM → peer HBM → remote HBM / host via MoRI-UMBP) using the
 previous step's attention to prefetch, for contexts beyond one node's HBM.
 
@@ -151,6 +157,57 @@ compare against published numbers only, clearly labeled.
 
 Report tokens/s/GPU and joules per token where possible (MI355X is a 1,400 W part).
 
+### 6.1 Multi-node profiling (C6)
+
+**What to capture, by layer.** Every source is written per rank (host name + rank in the file name)
+and merged afterwards.
+
+| Layer | Tool | What it gives us |
+|-------|------|------------------|
+| Application | ROCTx ranges emitted by our SGLang changes: request id, denoising step, block, layer phase (attention / MoE / dispatch / combine / CP merge / KV transfer); SGLang's built-in torch-profiler hooks | Semantic spans to attribute every kernel to a step and phase |
+| GPU kernels, copies, collectives | `rocprofv3 --kernel-trace --memory-copy-trace --rccl-trace --marker-trace` (or `--sys-trace`); default `rocpd` database per rank, converted with `rocpd convert` / `rocpd2pftrace` to Perfetto | Kernel timelines, RCCL calls, SDMA copies, ROCTx markers |
+| Hardware counters | `rocprofv3 --pmc` on selected kernels; `rocprof-compute` (Omniperf) roofline for attention and fused-MoE kernels | Achieved HBM bandwidth vs 5.3 / 8 TB/s, MFMA utilization, occupancy |
+| MoRI-EP device side | **MORI-VIZ** (build MoRI with `ENABLE_PROFILER=ON`): warp-level spans in dispatch/combine kernels, exported to Perfetto | Where GPU-initiated RDMA time goes: packing, RDMA post, wait, XGMI copy |
+| MoRI-IO host side | `MORI_ROCTX=1`: ranges around batch-write dispatch and RDMA posting, plus post-to-completion markers | Exposed vs hidden KV-transfer time in PD disaggregation |
+| rocSHMEM (if used) | `rocprofv3 --rocshmem-trace` | GPU-initiated OpenSHMEM calls |
+| NIC / fabric | Sample every ~100 ms: `rdma statistic`, `ethtool -S`; Pollara: `nicctl` port / QoS / DCQCN statistics; CX-7: congestion-notification (CNP) and out-of-sequence counters; switch telemetry where available | Per-NIC bytes/s vs line rate, PFC pause frames, CNPs, retransmits, packet-spray behavior |
+| Node | `amd-smi` metrics sampling (power, clocks, HBM temperature) | Energy per token, throttling detection |
+
+**Aligning clocks across nodes.** Run PTP (or chrony at minimum) on all nodes. At the start of each
+run, every rank records a host timestamp and a GPU timestamp immediately after a global barrier; the
+merge step uses these to compute per-rank offsets and produces one Perfetto trace covering all
+64 GPUs, with one track group per node.
+
+**Derived metrics (computed automatically from merged traces):**
+
+- **Per-step critical path** across ranks and its split into KV read, expert weights, EP
+  dispatch/combine, CP merge, sampling (feeds the C1 cost model).
+- **Exposed communication:** communication time not overlapped by compute, per phase.
+- **Stragglers:** slowest rank per step and why (EP load imbalance from MoRI-EP `recv_count`, longer
+  KV shard, NIC congestion).
+- **EP load imbalance per step:** tokens received per rank and expert; Gini coefficient over time.
+  This also feeds the CPU placement predictor from the SIEDS abstract.
+- **KV-transfer overlap:** fraction of PD transfer hidden behind prefill (MoRI-IO vs IBGDA).
+- **Fabric health:** NIC utilization vs 400 Gb/s, PFC pause fraction, CNP rate, UEC vs RoCEv2.
+
+**Overhead control.** Trace a fixed window (for example, 20 denoising steps after warmup), filter
+kernels by name, keep counter collection to separate runs, and report measured profiler overhead
+(target under 5% on throughput).
+
+**Profiling figures:**
+
+| # | Figure |
+|---|--------|
+| F9 | Critical-path breakdown per step at 1M / 2M across 8 → 64 GPUs |
+| F10 | Rank x step heatmap of step time and EP tokens received (stragglers, imbalance) |
+| F11 | NIC utilization and congestion events over time: AINIC UEC vs RoCEv2 vs CX-7 |
+| F12 | Communication–compute overlap efficiency before and after C2–C4 |
+
+**Tooling to build in this repo** (extends `scripts/run_profiling.sh` and `src/profiling/`):
+a multi-node launcher that wraps each rank with `rocprofv3` and starts NIC/`amd-smi` samplers; a
+clock-offset recorder; `analysis/merge_traces.py` to align and merge per-rank traces into one
+Perfetto file; and `analysis/critical_path.py` for the derived metrics above.
+
 ---
 
 ## 7. Implementation Strategy
@@ -212,17 +269,17 @@ shared backend (Section 7.2). Validate lossless QoS (PFC, DCQCN) and cross-clust
 | Venue | Abstract | Full paper | Feasible? |
 |-------|----------|-----------|-----------|
 | [IPDPS 2027](https://www.ipdps.org/ipdps2027/2027-call-for-papers.html) | Oct 1, 2026 | Oct 8, 2026 (firm) | **No** for this scope (under 2 weeks, no system built yet) |
-| [MLSys 2027](https://mlsys.org/Conferences/2027/Dates) | — | **Oct 30, 2026** | **Tight but possible** with the must-have scope (C1–C3, IBGDA as stretch) |
+| [MLSys 2027](https://mlsys.org/Conferences/2027/Dates) | — | **Oct 30, 2026** | **Tight but possible** with the must-have scope (C1–C3 + C6, IBGDA as stretch) |
 | Fallbacks | — | Spring 2027 systems / HPC venues | Full scope incl. IBGDA streaming and KV tiering |
 
 **Five-week plan to MLSys (Sep 28 → Oct 30):**
 
 | Week | Dates | Goals |
 |------|-------|-------|
-| 1 | Sep 28 – Oct 4 | SGLang LLaDA2.2-mini/flash and Ling 2.0 AR baselines running on MI355X; Qwen2.5-1M on vLLM; rocprofv3 step breakdown (F1); fabric + MoRI-EP/IO micro-benchmarks |
+| 1 | Sep 28 – Oct 4 | SGLang LLaDA2.2-mini/flash and Ling 2.0 AR baselines running on MI355X; Qwen2.5-1M on vLLM; multi-node profiling pipeline (rocprofv3 per rank, NIC/amd-smi samplers, clock alignment, trace merge) and first step breakdown (F1); fabric + MoRI-EP/IO micro-benchmarks |
 | 2 | Oct 5 – Oct 11 | Long context on one node: RoPE scaling, chunked prefill, FP8 KV, decode CP (C2); first 1M–2M runs (F2, F7) |
 | 3 | Oct 12 – Oct 18 | Multi-node ring prefill (F3); shard-aligned PD via MoRI-IO (C3, F4); step-aware EP prototype (C4) |
-| 4 | Oct 19 – Oct 25 | Full experiment sweep on 1–4 nodes, ablations (F5, F6, F8), quality runs (T1); IBGDA streaming only if C1–C3 are done |
+| 4 | Oct 19 – Oct 25 | Full experiment sweep on 1–8 nodes, ablations (F5, F6, F8), profiling figures (F9–F12), quality runs (T1); IBGDA streaming only if C1–C3 are done |
 | 5 | Oct 26 – Oct 30 | Writing, figures, artifact cleanup |
 
 ---
