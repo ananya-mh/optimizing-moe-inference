@@ -43,7 +43,7 @@ See [AMD's vLLM Docker guide](https://www.amd.com/en/developer/resources/technic
 
 | Model | Total | Active | Experts | Top-k | Type | Min GPUs |
 |-------|-------|--------|---------|-------|------|----------|
-| **LLaDA-MoE-7B** | 7B | 1.4B | 8 | 2 | Diffusion MoE | 1 |
+| **LLaDA-MoE-7B** | 7B | 1.4B | 64 | 8 | Diffusion MoE | 1 |
 | LLaDA-8B | 8B | 8B | 1 (dense) | - | Diffusion | 1 |
 | Qwen1.5-MoE-A2.7B | 14.3B | 2.7B | 60 | 4 | Autoregressive MoE | 1 |
 | OLMoE-1B-7B | 6.9B | 1.3B | 64 | 8 | Autoregressive MoE | 1 |
@@ -105,6 +105,7 @@ optimizing-moe-inference/
 ├── experiments/                       # Per-experiment notes
 ├── results/                           # Output (gitignored)
 ├── Report1.md                         # Benchmark results from MI300X experiments
+├── Report2.md                         # Related work, MI355X + AINIC, MoRI, 1M-2M context analysis
 ├── requirements.txt
 ├── setup.py
 └── LICENSE                            # MIT
@@ -230,7 +231,9 @@ bash scripts/run_llada_benchmarks.sh
 
 **Experiment 5 — Multi-Node Scaling**: Cross-node EP with RDMA (2-4 nodes, CX-7 NICs) for DBRX (132B) and DeepSeek-V3 (671B).
 
-See [Report1.md](Report1.md) for results already collected.
+See [Report1.md](Report1.md) for results already collected, and [Report2.md](Report2.md) for the
+related-work survey (Fast-dLLM, LLaDA family, dInfer, SGLang dLLM), MI355X + Pollara AI NIC and MoRI
+notes, and the 1M–2M token context analysis and engine roadmap.
 
 ## EP Load Balancing Analysis
 

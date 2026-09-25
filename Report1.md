@@ -154,6 +154,11 @@ with ROCm support, implementing the full block-based denoising loop.
 - The bottleneck is the forward pass: 64 experts with top-8 routing creates significant compute overhead when all experts are on one GPU
 - Sampling overhead is minimal (2-3% of total time) — optimization should focus on the MoE forward pass
 - **This demonstrates why Expert Parallelism is critical for MoE diffusion models** — distributing 64 experts across multiple GPUs should dramatically improve throughput
+
+> **Correction (see [Report2.md](Report2.md), Section 1):** the slowdown is most likely a software
+> artifact. The Hugging Face `modeling_lladamoe.py` MoE block loops over all 64 experts in Python per
+> layer (~1,024 small kernel groups with host syncs per forward). Re-measure with a fused MoE kernel
+> before using this result to argue for Expert Parallelism.
 - GPU memory: LLaDA-8B uses ~16 GB, LLaDA-MoE-7B uses ~28 GB — both fit easily on MI300X (192 GB)
 
 #### LLaDA-8B Step Count Sweep (gen_length=128)

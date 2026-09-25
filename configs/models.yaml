@@ -11,8 +11,8 @@ models:
     hf_model_id: "inclusionAI/LLaDA-MoE-7B-A1B-Instruct"
     total_params_b: 7.0
     active_params_b: 1.4
-    num_experts: 8
-    top_k: 2
+    num_experts: 64
+    top_k: 8
     num_shared_experts: 0
     architecture: "llada_moe"
     dtype: "bfloat16"
