@@ -141,11 +141,11 @@ compare against published numbers only, clearly labeled.
 |---|------------|--------|-----------------------------|
 | F1 | Step-time breakdown vs context (4K → 2M), LLaDA2.2-mini/flash | ms per step by component | KV read and EP comm dominate beyond ~128K |
 | F2 | Decode tok/s vs context: LLaDA2.2 vs Ling 2.0 (same shape) | tok/s per request | Crossover; dLLM advantage ≈ TPF at long context |
-| F3 | Prefill strong scaling at 1M / 2M: 8 → 16 → 32 GPUs | TTFT, parallel efficiency | Near-linear (target ≥ 80%) |
+| F3 | Prefill strong scaling at 1M / 2M / 4M: 8 → 16 → 32 → 64 GPUs, MI355X+AINIC and MI300X+CX-7 | TTFT, parallel efficiency | Near-linear (target ≥ 80%) |
 | F4 | PD disaggregation: collocated vs MoRI-IO vs shard-aligned vs IBGDA | Goodput at SLO, KV transfer time, exposed transfer | Transfer hidden behind prefill |
 | F5 | Step-aware EP | Bytes dispatched per step, latency, GSM8K / HumanEval accuracy | Traffic drops with committed fraction; accuracy unchanged |
 | F6 | Ablation: add C2 → C3 → C4 → C5 one at a time | End-to-end tok/s and TTFT | Each adds measurable gain |
-| F7 | Max context vs node count (BF16 / FP8) | Largest context served | 2M on 1 node (flash), 4M+ on 2–4 nodes |
+| F7 | Max context vs node count (BF16 / FP8) | Largest context served | 2M on 1 node (flash), 4M–8M on 2–8 nodes |
 | F8 | Generality: SDAR-30B, DiffusionGemma, LLaDA-8B (frozen prefix) | Speedup over SGLang / HF | Techniques transfer |
 | T1 | Quality vs context | NIAH, RULER at 32K–2M | Honest: good ≤128K, degraded beyond without post-training |
 
@@ -154,6 +154,44 @@ Report tokens/s/GPU and joules per token where possible (MI355X is a 1,400 W par
 ---
 
 ## 7. Implementation Strategy
+
+### 7.1 Engine choice
+
+| Engine | dLLM support (Sep 2026) | Multi-node / MoRI | Verdict |
+|--------|-------------------------|-------------------|---------|
+| **SGLang** | Native: LLaDA2.0/2.1 (MI300X/MI325X/MI355X documented), SDAR, DiffusionGemma; `LowConfidence` / `JointThreshold`; FDFO batching; TP/EP; graphs | MoRI-EP and MoRI-IO integrated; AMD's MI355X PD + wide-EP recipes | **Primary engine for all dLLM work** |
+| vLLM | DiffusionGemma native (Jun 2026, via ModelState / spec-decode path). LLaDA2 only through [`vllm-project/dllm-plugin`](https://github.com/vllm-project/dllm-plugin): MVP, `--max-num-seqs 1` required, TP only | MoRIIOConnector, DCP, DP+EP mature for AR | **AR baselines** (Ling 2.0, Qwen2.5-1M) and DiffusionGemma cross-check |
+| dInfer | LLaDA, LLaDA-MoE, LLaDA2.x; strongest batch-1 dLLM speed | TP/EP on one node; ROCm undocumented | Baseline only |
+| Fast-dLLM v2 reference | Plain PyTorch/HF loop, block + sub-block cache, single-GPU; vLLM support still a TODO | None | Algorithm reference, not an engine |
+| Custom engine (this repo) | LLaDA-8B, LLaDA-MoE | RCCL only | Legacy fully-bidirectional models |
+
+NVlabs' own follow-ups (Fast-dVLM, Fast-dDrive) moved to a customized SGLang fork for serving, which
+supports the same choice.
+
+### 7.2 Hardware available
+
+| Cluster | Nodes x GPUs | HBM total | NICs |
+|---------|--------------|-----------|------|
+| MI300X + ConnectX-7 | 8 x 8 = 64 GPUs | 12.3 TB | CX-7 (RoCEv2) |
+| MI355X + Pollara 400 AINIC | 8 x 8 = 64 GPUs | 18.4 TB | Pollara (UEC-ready / RoCEv2) |
+
+Both clusters are reported to share a backend network. This enables three things beyond Section 6:
+
+1. **Scale to 64 GPUs per cluster.** EP64 for LLaDA2.x-flash (4 of 256 experts per GPU); ring-CP
+   prefill across 8 nodes. *Estimate* for LLaDA2.2-flash prefill (block-causal, ~2·L²·d·layers FLOPs,
+   ~1 PF/s effective per GPU, 64 GPUs): 2M ≈ 16 s, 4M ≈ 65 s, 8M ≈ 4.4 min. KV at 8M ≈ 525 GB BF16,
+   far below cluster HBM, so **2M–8M token contexts are feasible at the systems level**.
+2. **Cross-generation, cross-NIC study.** Identical software on MI300X/CX-7 and MI355X/AINIC separates
+   GPU-generation effects from NIC effects and shows MoRI is not tied to one NIC vendor, which answers
+   part of the "AMD-only" concern.
+3. **Heterogeneous PD disaggregation (new angle, needs validation).** Prefill is compute-bound
+   (O(L²) attention), so run it on MI355X (2.5 PF BF16); run decode on MI300X nodes and move KV with
+   MoRI-IO across the shared fabric. Open issues: CX-7 ↔ Pollara RoCEv2 interoperability must be
+   tested (`ib_write_bw`, `rccl-tests` across one host of each); FP8 KV must be converted between
+   MI355X OCP e4m3 and MI300X FNUZ formats; MoRI QoS settings (`MORI_RDMA_SL` / `MORI_RDMA_TC`) must
+   match on both fabrics.
+
+### 7.3 Build strategy
 
 **Build on SGLang for LLaDA2.x, keep the custom engine for LLaDA-8B / LLaDA-MoE.** SGLang already
 runs LLaDA2.x on MI355X with KV cache, threshold decoding, TP/EP and MoRI integrations. Writing a new
@@ -164,8 +202,8 @@ changes plus MoRI-level code.
 The existing custom engine (`src/inference/llada_engine.py`) still needs Report2's roadmap items 1–4
 (fused MoE, flash attention, KV cache, threshold decoding) for the legacy-model experiments.
 
-**Hardware needed:** 4 nodes x 8 MI355X with 8x Pollara 400 each, lossless fabric configured (PFC,
-DCQCN), for about three weeks of experiments.
+**Hardware:** 8 nodes x 8 MI355X with Pollara 400 AINICs, plus 8 nodes x 8 MI300X with CX-7 on a
+shared backend (Section 7.2). Validate lossless QoS (PFC, DCQCN) and cross-cluster RDMA in week 1.
 
 ---
 
