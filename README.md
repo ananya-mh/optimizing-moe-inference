@@ -107,6 +107,7 @@ optimizing-moe-inference/
 ├── Report1.md                         # Benchmark results from MI300X experiments
 ├── Report2.md                         # Related work, MI355X + AINIC, MoRI, 1M-2M context analysis
 ├── Report3.md                         # Paper plan: dLLM scaling to multi-million-token contexts
+├── paper/                             # MLSys 2027 LaTeX draft (latexmk -pdf main.tex)
 ├── requirements.txt
 ├── setup.py
 └── LICENSE                            # MIT

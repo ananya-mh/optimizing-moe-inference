@@ -1,0 +1,105 @@
+\section{Evaluation}
+\label{sec:eval}
+
+We answer five questions:
+\textbf{(Q1)} How does dLLM inference scale with context compared with AR models of identical
+architecture?
+\textbf{(Q2)} How well do prefill and decode scale across nodes?
+\textbf{(Q3)} What does each \sys technique contribute?
+\textbf{(Q4)} What is the largest context \sys can serve, and at what quality?
+\textbf{(Q5)} Do the techniques generalize across models, GPU generations and NICs?
+
+\subsection{Setup}
+
+\begin{table}[t]
+\caption{Hardware. Both clusters share a backend network.}
+\label{tab:hw}
+\centering\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lll}
+\toprule
+ & Cluster A & Cluster B \\
+\midrule
+Nodes $\times$ GPUs & 8 $\times$ 8 MI355X & 8 $\times$ 8 MI300X \\
+HBM per GPU & 288\,GB, 8\,TB/s & 192\,GB, 5.3\,TB/s \\
+Scale-out NIC & 8$\times$ Pollara 400 & 8$\times$ ConnectX-7 \\
+Transport & UEC-ready RDMA / RoCEv2 & RoCEv2 \\
+Software & \multicolumn{2}{l}{ROCm \todo{ver}, SGLang \todo{commit}, MoRI \todo{commit}} \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{table}[t]
+\caption{Models. Each dLLM is paired with an AR model of identical shape where one exists.}
+\label{tab:models}
+\centering\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lll}
+\toprule
+Role & dLLM & AR baseline \\
+\midrule
+Small MoE & LLaDA2.2-mini (16B/1.4B) & Ling-mini-2.0 \\
+Large MoE & LLaDA2.2-flash (103B/6.1B) & Ling-flash-2.0 \\
+Generality & SDAR-30B-A3B, DiffusionGemma-26B & --- \\
+Long-context AR & --- & Qwen2.5-7B/14B-Instruct-1M \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\textbf{Baselines.} All systems run on SGLang: (1) SGLang dLLM as released (LowConfidence /
+JointThreshold, FDFO, TP/EP); (2) AR models on SGLang with decode context parallelism, MoRI-EP and
+MoRI prefill/decode disaggregation; (3) published dInfer~\cite{ma2025dinfer} and
+Fast-dLLM~\cite{wu2025fastdllm} numbers, labeled as cross-platform references.
+Component baselines: RCCL all-to-all versus MoRI-EP kernels; MoRI-IO (plain, chunked, multi-QP)
+versus shard-aligned versus IBGDA streaming; NCCL-style DCP merge versus MoRI merge; UEC versus
+RoCEv2 transport; BF16 versus FP8 KV.
+
+\textbf{Metrics.} Time to first token (prefill), per-step latency, \TPF, decode tokens/s per request,
+goodput under SLOs, tokens/s/GPU, energy per token, peak memory, and NIAH/RULER accuracy.
+
+\subsection{Q1: Diffusion versus AR at Long Context}
+Figure~\ref{fig:arvsdllm} (\S\ref{sec:char}) \todo{result}.
+
+\subsection{Q2: Multi-Node Scaling}
+\placeholderfig{fig:prefillscale}{Prefill strong scaling at 1M/2M/4M tokens from 8 to 64 GPUs on
+both clusters.}{F3: TTFT and parallel efficiency vs GPUs; lines per context length; target
+$\geq$80\% efficiency.}
+\placeholderfig{fig:pd}{Prefill/decode disaggregation: goodput and exposed KV-transfer time.}{F4:
+collocated vs MoRI-IO vs shard-aligned vs IBGDA streaming; bars = goodput at SLO, markers = exposed
+transfer.}
+
+\subsection{Q3: Ablation}
+\placeholderfig{fig:ablation}{Cumulative contribution of \sys techniques for LLaDA2.2-flash at
+1M tokens.}{F6: baseline SGLang $\rightarrow$ +DCP $\rightarrow$ +PD streaming $\rightarrow$
++step-aware EP $\rightarrow$ +UMBP $\rightarrow$ +TPF scheduling; decode tok/s and TTFT.}
+\placeholderfig{fig:ep}{Step-aware EP: bytes dispatched per step and accuracy.}{F5: dispatched bytes
+vs denoising step within a block; GSM8K/HumanEval accuracy with and without routing reuse.}
+
+\subsection{Q4: Maximum Context and Quality}
+\placeholderfig{fig:maxctx}{Largest servable context versus node count, with and without UMBP tiering
+and FP8 KV.}{F7: 2M on one MI355X node (flash) up to \todo{X}M on 8 nodes; UMBP extends beyond
+aggregate HBM.}
+\begin{table}[t]
+\caption{Needle-in-a-haystack and RULER accuracy versus context. Beyond native context (128K) RoPE
+scaling is applied; results are reported as measured.}
+\label{tab:quality}
+\centering\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Model & 128K & 512K & 1M & 2M \\
+\midrule
+LLaDA2.2-mini & \todo{} & \todo{} & \todo{} & \todo{} \\
+LLaDA2.2-flash & \todo{} & \todo{} & \todo{} & \todo{} \\
+Ling-flash-2.0 & \todo{} & \todo{} & \todo{} & \todo{} \\
+Qwen2.5-7B-1M & \todo{} & \todo{} & \todo{} & \todo{} \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{Q5: Generality and Profiling Insights}
+\placeholderfig{fig:gen}{Speedup of \sys over SGLang dLLM across models and clusters.}{F8: SDAR-30B,
+DiffusionGemma, LLaDA2.2-mini/flash on MI355X+Pollara and MI300X+CX-7.}
+\placeholderfigwide{fig:prof}{Multi-node profiling at 2M tokens on 64 GPUs.}{F9--F12: (a) critical
+path per step; (b) rank$\times$step heatmap of step time and EP tokens received; (c) NIC utilization
+and congestion events, UEC vs RoCEv2 vs CX-7; (d) communication--compute overlap before/after \sys.}

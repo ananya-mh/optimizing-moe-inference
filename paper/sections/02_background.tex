@@ -1,0 +1,33 @@
+\section{Background}
+\label{sec:background}
+
+\subsection{Diffusion Language Models}
+Masked diffusion LLMs start from a fully masked response and, at each denoising step, predict all
+masked positions and commit a subset~\cite{nie2025llada,ye2025dream}. Fully bidirectional models
+(LLaDA-8B, LLaDA-MoE~\cite{zhu2025lladamoe}) let every token attend to every other token, so the
+prompt's KV depends on the evolving response. Block-diffusion models~\cite{arriola2025blockdiffusion}
+(LLaDA2.x~\cite{bie2025llada2,bie2026llada21}, SDAR~\cite{cheng2025sdar}, Fast-dLLM
+v2~\cite{wu2025fastdllmv2}) generate blocks left to right with bidirectional attention inside a block
+and causal attention across blocks, so committed-block KV is exact and reusable.
+
+\subsection{Accelerating dLLM Inference}
+Approximate KV caching (Fast-dLLM~\cite{wu2025fastdllm}, dKV-Cache~\cite{ma2025dkvcache},
+dLLM-Cache~\cite{liu2025dllmcache}, d$^2$Cache~\cite{jiang2025d2cache}) and confidence-threshold
+parallel decoding recover most of the gap to AR models. Sparse-dLLM~\cite{song2025sparsedllm}
+evicts low-saliency cache entries. D2F~\cite{wang2025d2f} distills dLLMs into AR--diffusion hybrids.
+dInfer~\cite{ma2025dinfer} and SGLang~\cite{sglangdllm} provide dLLM serving on a single node.
+
+\subsection{Long-Context Distributed Inference}
+Ring attention~\cite{liu2023ringattention} and context parallelism~\cite{yang2024contextparallel}
+shard long sequences across GPUs; decode context parallelism shards the KV cache along the
+sequence~\cite{vllmdcp,chen2026nanocp}. Prefill/decode disaggregation~\cite{zhong2024distserve,
+qin2024mooncake} moves KV between phase-specialized instances. Long-context AR models rely on sparse
+or hybrid attention~\cite{yang2025qwen25_1m,deepseek2025v32}. For dLLMs, training-free RoPE
+extension reaches 24K~\cite{liu2025longllada} and post-training reaches 128K~\cite{he2025ultrallada}.
+
+\subsection{Platform: MI355X, AI NICs and MoRI}
+An MI355X provides 288\,GB HBM3E at 8\,TB/s and 2.5\,PFLOP/s dense BF16~\cite{mi355x}; eight GPUs
+share a fully connected Infinity Fabric and each GPU has a dedicated 400\,Gb/s Pollara AI NIC with
+UEC-ready RDMA and packet spraying~\cite{pollara}. MoRI~\cite{mori} provides GPU-initiated (IBGDA)
+symmetric-memory communication (MoRI-SHMEM), MoE dispatch/combine (MoRI-EP), point-to-point KV
+transfer (MoRI-IO), and a distributed tiered KV pool over HBM, DRAM and SSD (MoRI-UMBP).

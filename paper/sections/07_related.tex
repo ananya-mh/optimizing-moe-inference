@@ -1,0 +1,25 @@
+\section{Related Work}
+\label{sec:related}
+
+\textbf{Diffusion LLMs.} LLaDA~\cite{nie2025llada}, LLaDA~1.5~\cite{zhu2025llada15},
+LLaDA-V~\cite{you2025lladav}, LLaDA-MoE~\cite{zhu2025lladamoe}, Dream~\cite{ye2025dream}, block
+diffusion~\cite{arriola2025blockdiffusion}, SDAR~\cite{cheng2025sdar} and
+LLaDA2.x~\cite{bie2025llada2,bie2026llada21,llada22} establish dLLMs up to 100B parameters.
+Fast-dLLM v2~\cite{wu2025fastdllmv2} and Fast-dVLM~\cite{wu2026fastdvlm} convert AR models to block
+diffusion. These works focus on modeling and single-GPU efficiency.
+
+\textbf{dLLM acceleration and serving.} Caching~\cite{wu2025fastdllm,ma2025dkvcache,
+liu2025dllmcache,jiang2025d2cache,song2025sparsedllm}, distillation~\cite{wang2025d2f} and
+frameworks~\cite{ma2025dinfer,sglangdllm,diffusiongemma} accelerate single-node inference;
+DiLaServe~\cite{chang2026dilaserve} schedules a cluster of TP instances. \sys is the first to
+disaggregate, context-parallelize and tier dLLM inference across nodes at million-token scale.
+
+\textbf{Long-context LLM systems.} Ring attention~\cite{liu2023ringattention}, context
+parallelism~\cite{yang2024contextparallel}, decode context parallelism~\cite{vllmdcp},
+NanoCP~\cite{chen2026nanocp}, PagedAttention~\cite{kwon2023vllm}, disaggregation~\cite{zhong2024distserve,
+qin2024mooncake,vllmmoriio} and sparse/hybrid attention~\cite{yang2025qwen25_1m,deepseek2025v32}
+target AR models. \sys adapts these ideas to diffusion decoding, where multi-token commits and
+immutable prefixes change the trade-offs.
+
+\textbf{Long-context dLLMs.} LongLLaDA~\cite{liu2025longllada} and UltraLLaDA~\cite{he2025ultrallada}
+extend dLLM context to 24K and 128K; our systems work is complementary.

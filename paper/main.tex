@@ -1,0 +1,93 @@
+%%%%%%%% MLSys 2027 submission (uses the MLSys 2025 style, per the MLSys 2027 CFP) %%%%%%%%
+\documentclass{article}
+
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{hyperref}
+
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Blind submission. For camera-ready use: \usepackage[accepted]{mlsys2025}
+\usepackage{mlsys2025}
+
+% ---------------------------------------------------------------------------
+% Project macros
+% ---------------------------------------------------------------------------
+% System name in one place so it can be renamed (check for collisions before submission).
+\newcommand{\sys}{\textsc{dScale}\xspace}
+% Draft markers. Set \drafttrue to \draftfalse to hide all of them before submission.
+\newif\ifdraft
+\drafttrue
+\ifdraft
+  \newcommand{\todo}[1]{{\color{red}\textbf{[TODO: #1]}}}
+  \newcommand{\est}[1]{{\color{orange}#1\textsuperscript{est}}}
+  \newcommand{\hyp}[1]{{\color{blue}\textit{[Hypothesis: #1]}}}
+\else
+  \newcommand{\todo}[1]{}
+  \newcommand{\est}[1]{#1}
+  \newcommand{\hyp}[1]{}
+\fi
+% Placeholder figure: \placeholderfig{label}{caption}{what the plot must show}
+\newcommand{\placeholderfig}[3]{%
+  \begin{figure}[t]
+    \centering
+    \fbox{\parbox[c][3.2cm][c]{0.92\columnwidth}{\centering\small\textit{#3}}}
+    \caption{#2}
+    \label{#1}
+  \end{figure}}
+\newcommand{\placeholderfigwide}[3]{%
+  \begin{figure*}[t]
+    \centering
+    \fbox{\parbox[c][3.6cm][c]{0.95\textwidth}{\centering\small\textit{#3}}}
+    \caption{#2}
+    \label{#1}
+  \end{figure*}}
+\newcommand{\TPF}{\ensuremath{\mathrm{TPF}}\xspace}
+
+\mlsystitlerunning{Scaling Diffusion LLM Inference to Multi-Million-Token Contexts}
+
+\begin{document}
+
+\twocolumn[
+\mlsystitle{\sys: Exploiting Diffusion Decoding to Scale LLM Inference\\
+to Multi-Million-Token Contexts on GPU Clusters}
+
+\mlsyssetsymbol{equal}{*}
+
+% Author information is removed automatically in the blind version.
+\begin{mlsysauthorlist}
+\mlsysauthor{Anonymous Author(s)}{anon}
+\end{mlsysauthorlist}
+\mlsysaffiliation{anon}{Anonymous Institution}
+\mlsyscorrespondingauthor{Anonymous}{anon@example.com}
+
+\mlsyskeywords{Diffusion Language Models, LLM Inference, Long Context, Mixture of Experts,
+Context Parallelism, Disaggregated Serving, RDMA}
+
+\vskip 0.3in
+
+\input{sections/00_abstract}
+]
+
+\printAffiliationsAndNotice{}
+
+\input{sections/01_introduction}
+\input{sections/02_background}
+\input{sections/03_characterization}
+\input{sections/04_design}
+\input{sections/05_implementation}
+\input{sections/06_evaluation}
+\input{sections/07_related}
+\input{sections/08_conclusion}
+
+\bibliography{refs}
+\bibliographystyle{mlsys2025}
+
+\end{document}

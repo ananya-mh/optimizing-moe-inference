@@ -1,0 +1,27 @@
+\section{Implementation}
+\label{sec:impl}
+
+\sys is implemented in SGLang~\cite{zheng2023sglang} and MoRI~\cite{mori}; every model and baseline
+in this paper runs on the same engine. Changes (\todo{final LoC}):
+\begin{itemize}
+  \item \textbf{dLLM feature enablement.} Lift SGLang's dLLM restrictions on disaggregation,
+  hierarchical cache and graph capture on AMD GPUs; make context parallelism correct for block
+  diffusion and bidirectional attention.
+  \item \textbf{MoRI DCP backend.} A GPU-initiated partial-attention merge (\S\ref{sec:design-cp}).
+  \item \textbf{dLLM PD connector.} Shard-aligned, commit-driven KV streaming over MoRI-IO, and an
+  IBGDA path through MoRI-SHMEM (\S\ref{sec:design-pd}).
+  \item \textbf{Step-aware MoE layer} on top of SGLang's MoRI-EP backend (\S\ref{sec:design-ep}).
+  \item \textbf{UMBP integration for dLLMs} with saliency-guided prefetch (\S\ref{sec:design-umbp}).
+  \item \textbf{Long-context support}: RoPE scaling beyond native context, chunked prefill, FP8 KV.
+\end{itemize}
+
+\subsection{Multi-Node Profiling}
+\label{sec:impl-prof}
+We attribute every GPU kernel, collective, RDMA transfer and NIC event to a request, denoising step
+and phase. Each rank emits ROCTx ranges from SGLang and records kernel, copy and RCCL traces with
+rocprofv3~\cite{rocprofv3}; MoRI-EP kernels are instrumented at warp level with MORI-VIZ and MoRI-IO
+with host submission and completion markers; per-NIC counters (bytes, PFC pauses, congestion
+notifications, retransmissions) and GPU power are sampled every 100\,ms. Clocks are aligned with PTP
+and a post-barrier timestamp per rank, and per-rank traces are merged into a single Perfetto timeline
+from which we compute critical paths, exposed communication, stragglers and EP load imbalance.
+Profiler overhead is \todo{X}\%.

@@ -87,8 +87,15 @@ RCCL traces, MoRI device-side (warp-level) traces, and NIC/fabric counters, merg
 clock-aligned timeline per experiment. It produces the step-time breakdown for C1, exposes stragglers
 and un-overlapped communication, and is released as an artifact (details in Section 6.1).
 
-**Stretch — Saliency-guided KV tiering** (HBM → peer HBM → remote HBM / host via MoRI-UMBP) using the
-previous step's attention to prefetch, for contexts beyond one node's HBM.
+**C7 — Cluster-wide tiered KV with MoRI-UMBP (should-have).** MoRI-UMBP is a distributed KV pool over
+HBM, host DRAM and SSD: each node's peer process owns its blocks, a master acts only as a routing
+advisor (global block index built from heartbeat events, capacity-aware placement, eviction by
+watermark), and blocks move by RDMA. SGLang already integrates it as a hierarchical-cache storage
+backend (`--hicache-storage-backend mori`) and for PD transfer, but only for AR models. For dLLMs we
+use it for (a) contexts beyond aggregate HBM, with saliency-guided prefetch (dLLM attention saliency is
+stable across steps), (b) exact reuse of immutable committed prefixes across requests and nodes, and
+(c) heterogeneous disaggregation where MI300X nodes act as decode and KV-capacity tier for MI355X
+prefill (Section 7.2).
 
 ---
 
@@ -100,7 +107,7 @@ previous step's attention to prefetch, for contexts beyond one node's HBM.
 | **Large** | LLaDA2.2-flash (103B / 6.1B active, 128K native) | **Ling-flash-2.0** | Identical shape: 32 layers, d=4096, 4 KV heads, 256 experts top-8 |
 | Dense long-context AR reference | — | Qwen2.5-7B-Instruct-1M, Qwen2.5-14B-Instruct-1M | Natively ~1M context; strongest available long-context AR baselines |
 | Other dLLM families (generality) | SDAR-30B-A3B, DiffusionGemma-26B-A4B (256K, sliding window) | — | Show the techniques are not LLaDA-specific |
-| Legacy (from Report1) | LLaDA-8B, LLaDA-MoE-7B | — | Fully bidirectional models; used for the frozen-prefix study |
+| Legacy (from Report1), optional | LLaDA-8B, LLaDA-MoE-7B | — | Not supported by SGLang (it only ships `llada2.py`). Kept as Report1 motivation; port to SGLang only if time allows (frozen-prefix study) |
 
 KV cache at 2M tokens (BF16, *estimate*): LLaDA2.2-mini ~82 GB, LLaDA2.2-flash ~131 GB,
 SDAR-30B ~197 GB, LLaDA-8B ~1,049 GB. The GQA models make 2M–4M contexts affordable on one to four
@@ -118,10 +125,8 @@ NIAH / RULER accuracy as measured and frame 2M+ results as systems results.
 | Baseline | What it tells us |
 |----------|------------------|
 | **SGLang dLLM** (LLaDA2.x, `LowConfidence` / `JointThreshold`, FDFO, TP/EP, MoRI-EP) on MI355X | Strongest open dLLM serving stack on the same hardware — our main system baseline |
-| **dInfer** (LLaDA-MoE, LLaDA2.x) | State-of-the-art batch-1 dLLM speed; run on ROCm if it ports, otherwise compare against published H800 numbers with caveats |
-| **Fast-dLLM v1** reference (LLaDA-8B) | Training-free caching + parallel decoding baseline |
-| **vLLM / SGLang AR** serving Ling-mini/flash-2.0 and Qwen2.5-1M, with DCP and MoRIIOConnector PD | The AR world at the same context length and hardware |
-| HF reference implementations | Lower bound; reproduces Report1 |
+| **SGLang AR** serving Ling-mini/flash-2.0 (`bailing_moe`) and Qwen2.5-1M (`qwen2`), with `--dcp-size`, `--moe-a2a-backend mori`, `--disaggregation-transfer-backend mori` | The AR world at the same context length, hardware and engine |
+| dInfer, Fast-dLLM (published numbers only) | Cross-platform reference points, clearly labeled; not re-run |
 
 ### 5.2 Component baselines
 
@@ -214,16 +219,32 @@ Perfetto file; and `analysis/critical_path.py` for the derived metrics above.
 
 ### 7.1 Engine choice
 
+**Decision (Sep 25): SGLang for every model and baseline, dLLM and AR alike.** One engine removes
+engine differences from every comparison. The table below records why.
+
 | Engine | dLLM support (Sep 2026) | Multi-node / MoRI | Verdict |
 |--------|-------------------------|-------------------|---------|
-| **SGLang** | Native: LLaDA2.0/2.1 (MI300X/MI325X/MI355X documented), SDAR, DiffusionGemma; `LowConfidence` / `JointThreshold`; FDFO batching; TP/EP; graphs | MoRI-EP and MoRI-IO integrated; AMD's MI355X PD + wide-EP recipes | **Primary engine for all dLLM work** |
-| vLLM | DiffusionGemma native (Jun 2026, via ModelState / spec-decode path). LLaDA2 only through [`vllm-project/dllm-plugin`](https://github.com/vllm-project/dllm-plugin): MVP, `--max-num-seqs 1` required, TP only | MoRIIOConnector, DCP, DP+EP mature for AR | **AR baselines** (Ling 2.0, Qwen2.5-1M) and DiffusionGemma cross-check |
+| **SGLang** | Native: LLaDA2.x (`llada2.py`), SDAR (`sdar.py`, `sdar_moe.py`), DiffusionGemma (`gemma4_diffusion.py`); `LowConfidence` / `JointThreshold` / `Gemma4Renoise`; FDFO batching; TP/EP | `--moe-a2a-backend mori`, `--disaggregation-transfer-backend mori`, `--hicache-storage-backend mori` (UMBP), `--dcp-size`, `--attn-cp-size` | **The engine for everything** |
+| vLLM | DiffusionGemma native (Jun 2026, via ModelState / spec-decode path). LLaDA2 only through [`vllm-project/dllm-plugin`](https://github.com/vllm-project/dllm-plugin): MVP, `--max-num-seqs 1` required, TP only | MoRIIOConnector, DCP, DP+EP mature for AR | Not used (decision above) |
 | dInfer | LLaDA, LLaDA-MoE, LLaDA2.x; strongest batch-1 dLLM speed | TP/EP on one node; ROCm undocumented | Baseline only |
 | Fast-dLLM v2 reference | Plain PyTorch/HF loop, block + sub-block cache, single-GPU; vLLM support still a TODO | None | Algorithm reference, not an engine |
-| Custom engine (this repo) | LLaDA-8B, LLaDA-MoE | RCCL only | Legacy fully-bidirectional models |
+| Custom engine (this repo) | LLaDA-8B, LLaDA-MoE | RCCL only | Retired for the paper; Report1 only |
 
 NVlabs' own follow-ups (Fast-dVLM, Fast-dDrive) moved to a customized SGLang fork for serving, which
 supports the same choice.
+
+**What SGLang's dLLM path disables today** (from `python/sglang/srt/arg_groups/dllm_hook.py`, main
+branch, Sep 2026). These are exactly the features the paper needs, so enabling them is the concrete
+engineering core of C2–C4 and C7:
+
+| Feature | Status for dLLMs | Paper contribution |
+|---------|------------------|--------------------|
+| PD disaggregation (`--disaggregation-mode`) | Forced off ("not supported by diffusion LLM inference") | C3 shard-aligned KV streaming over MoRI-IO / IBGDA |
+| Hierarchical cache (`--enable-hierarchical-cache`, hence UMBP/Mooncake/NIXL storage) | Forced off | C7 UMBP tiering for dLLMs |
+| Pipeline parallelism | Forced off | Not needed (TP/EP/CP instead) |
+| CUDA/HIP graphs on AMD | Forced off | Enable for fixed-shape denoise steps (Report2 roadmap item 5) |
+| Attention backend on AMD | Forced to `triton` or `aiter` | Use AITER |
+| Decode / attention context parallelism (`--dcp-size`, `--attn-cp-size`) | Not blocked, but untested with dLLMs | C2; add a MoRI (GPU-initiated) option to `--dcp-comm-backend`, which today offers `ag_rs`, `a2a` (NCCL/RCCL), and `fi_a2a` (NVIDIA MNNVL only) |
 
 ### 7.2 Hardware available
 
@@ -250,14 +271,13 @@ Both clusters are reported to share a backend network. This enables three things
 
 ### 7.3 Build strategy
 
-**Build on SGLang for LLaDA2.x, keep the custom engine for LLaDA-8B / LLaDA-MoE.** SGLang already
-runs LLaDA2.x on MI355X with KV cache, threshold decoding, TP/EP and MoRI integrations. Writing a new
-engine for 100B MoE models in five weeks is not realistic; extending SGLang is. Our contributions
-(DCP for dLLM steps, shard-aligned PD, step-aware EP, TPF scheduler) are implemented as SGLang
-changes plus MoRI-level code.
+**SGLang for all models.** SGLang already runs LLaDA2.x, SDAR and DiffusionGemma, Ling 2.0 and Qwen2.5
+on MI355X with KV cache, threshold decoding, TP/EP and MoRI integrations. Writing a new engine for
+100B MoE models in five weeks is not realistic; extending SGLang is. All contributions (C2–C7) are
+SGLang changes plus MoRI-level code. The custom engine in `src/inference/` is retired for the paper;
+its Report1 numbers remain as motivation.
 
-The existing custom engine (`src/inference/llada_engine.py`) still needs Report2's roadmap items 1–4
-(fused MoE, flash attention, KV cache, threshold decoding) for the legacy-model experiments.
+The paper skeleton lives in [`paper/`](paper/) (MLSys style, builds with `latexmk -pdf main.tex`).
 
 **Hardware:** 8 nodes x 8 MI355X with Pollara 400 AINICs, plus 8 nodes x 8 MI300X with CX-7 on a
 shared backend (Section 7.2). Validate lossless QoS (PFC, DCQCN) and cross-cluster RDMA in week 1.
@@ -269,7 +289,7 @@ shared backend (Section 7.2). Validate lossless QoS (PFC, DCQCN) and cross-clust
 | Venue | Abstract | Full paper | Feasible? |
 |-------|----------|-----------|-----------|
 | [IPDPS 2027](https://www.ipdps.org/ipdps2027/2027-call-for-papers.html) | Oct 1, 2026 | Oct 8, 2026 (firm) | **No** for this scope (under 2 weeks, no system built yet) |
-| [MLSys 2027](https://mlsys.org/Conferences/2027/Dates) | — | **Oct 30, 2026** | **Tight but possible** with the must-have scope (C1–C3 + C6, IBGDA as stretch) |
+| [MLSys 2027](https://mlsys.org/Conferences/2027/Dates) (research or industrial track; cannot switch after deadline) | — | **Oct 30, 2026** | **Tight but possible** with the must-have scope (C1–C3 + C6; C4, C5, C7 as should-have; IBGDA as stretch) |
 | Fallbacks | — | Spring 2027 systems / HPC venues | Full scope incl. IBGDA streaming and KV tiering |
 
 **Five-week plan to MLSys (Sep 28 → Oct 30):**

@@ -1,0 +1,10 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+Diffusion decoding changes the economics of long-context inference: a dLLM reads its KV cache once
+per step but commits several tokens, and block diffusion makes prefix KV immutable. \sys turns these
+properties into a multi-node system that combines denoise-step context parallelism, shard-aligned KV
+streaming over GPU-initiated RDMA, step-aware expert parallelism and a cluster-wide tiered KV pool,
+serving 16B and 100B MoE dLLMs at contexts up to \todo{X}M tokens on 64 GPUs. Closing the remaining
+quality gap beyond 128K tokens through long-context post-training~\cite{he2025ultrallada} or
+AR-to-diffusion conversion of long-context AR models~\cite{wu2025fastdllmv2} is future work.

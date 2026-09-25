@@ -1,0 +1,15 @@
+\begin{abstract}
+Diffusion large language models (dLLMs) such as LLaDA generate text by iteratively denoising blocks of
+masked tokens, committing several tokens per forward pass. We observe that at million-token contexts,
+where autoregressive decoding is bound by streaming the KV cache from memory for every token, this
+property changes the distributed-systems trade-offs of inference: a dLLM reads the KV cache once per
+denoising step and amortizes it over multiple committed tokens, block-diffusion models produce
+immutable prefix KV, and attention and routing are stable across steps. We present \sys, a
+distributed dLLM inference system that exploits these properties across prefill and decode on
+multi-node GPU clusters. \sys combines denoise-step context parallelism, shard-aligned KV streaming
+for prefill/decode disaggregation over GPU-initiated RDMA, step-aware expert parallelism, and a
+cluster-wide tiered KV pool. On up to 64 AMD Instinct MI355X GPUs with 400\,Gb/s AI NICs, \sys serves
+16B and 100B MoE dLLMs at contexts up to \todo{X}M tokens, achieving \todo{X}$\times$ higher decode
+throughput than the same-architecture autoregressive model and \todo{X}$\times$ over state-of-the-art
+dLLM serving.
+\end{abstract}

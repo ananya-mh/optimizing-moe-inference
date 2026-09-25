@@ -1,0 +1,69 @@
+\section{\sys Design}
+\label{sec:design}
+
+\placeholderfigwide{fig:overview}{\sys architecture.}{Overview diagram: prefill pool (ring-CP over
+XGMI + AI NIC) streams committed-block KV shards over MoRI-IO / IBGDA to a decode pool (DCP + EP over
+MoRI-EP); MoRI-UMBP provides a cluster-wide HBM/DRAM/SSD KV tier; the scheduler sets block size and
+threshold per request.}
+
+\subsection{Denoise-Step Context Parallelism}
+\label{sec:design-cp}
+\textbf{Decode.} The KV cache of a request is sharded along the sequence across $G_{\text{cp}}$ GPUs.
+In each denoising step every GPU computes partial attention of the $B$-token query block over its
+shard; ranks then merge $(\text{output}, \text{log-sum-exp})$ pairs. Because $B$ is small
+(e.g.\ 32), the merge is latency-bound. We implement it as a GPU-initiated all-to-all fused into the
+attention epilogue using MoRI-SHMEM, exposed as a new SGLang DCP communication backend alongside the
+existing all-gather/reduce-scatter and NCCL all-to-all options.
+
+\textbf{Prefill.} Long prompts use two-level ring attention: XGMI within a node and AI NICs across
+nodes. Fully bidirectional attention is naturally load-balanced across ring steps; block-causal
+prompts use zig-zag chunk assignment. Chunked queries bound activation memory.
+
+\todo{Algorithm box for the fused merge; complexity and message sizes.}
+
+\subsection{Shard-Aligned, Commit-Driven KV Streaming}
+\label{sec:design-pd}
+SGLang currently disables disaggregation for dLLMs. \sys enables it and exploits two dLLM properties:
+(i) committed-block KV is immutable, so it can be streamed as soon as a layer's KV for a committed
+block exists; (ii) prefill and decode use the \emph{same} sequence sharding, so each prefill GPU sends
+exactly one shard to one decode GPU over its own NIC, using all eight NICs of a node in parallel with
+no reshuffle. Version~1 uses MoRI-IO (host-posted RDMA with chunking and multiple queue pairs);
+version~2 issues RDMA writes directly from the prefill kernels via MoRI-SHMEM (IBGDA), removing the
+CPU from the critical path.
+
+\hyp{At 2M tokens the KV transfer (\est{$\approx$131\,GB} for LLaDA2.2-flash, \est{$\approx$0.4\,s}
+over 8$\times$400\,Gb/s) is fully hidden behind prefill (\est{tens of seconds}).}
+
+\subsection{Step-Aware Expert Parallelism}
+\label{sec:design-ep}
+LLaDA2.x-flash has 256 routed experts plus a shared expert. Across denoising steps within a block,
+committed tokens change little. \sys caches routing decisions and expert outputs for committed tokens
+and dispatches only still-masked tokens through MoRI-EP, overlapping dispatch/combine with attention
+via the split send/receive API. Low-latency kernels are used for decode-sized batches and
+high-bandwidth kernels for prefill.
+
+\hyp{EP traffic falls roughly in proportion to the committed fraction of the block, with no accuracy
+loss.} \todo{Quantify routing stability; fall back to plain MoRI-EP if the hypothesis fails.}
+
+\subsection{Cluster-Wide Tiered KV with MoRI-UMBP}
+\label{sec:design-umbp}
+MoRI-UMBP is a distributed KV pool in which each node owns its HBM/DRAM/SSD blocks and a master acts
+as a routing advisor; blocks move by RDMA. SGLang integrates UMBP as a hierarchical-cache storage
+backend and PD transfer path for AR models, but not for dLLMs. \sys uses UMBP in three ways:
+\begin{enumerate}
+  \item \textbf{Beyond-HBM contexts.} Cold KV blocks are placed in host DRAM or peer memory and
+  prefetched ahead of use. Because dLLM attention saliency is stable across
+  steps~\cite{song2025sparsedllm}, the previous step's attention guides prefetch.
+  \item \textbf{Immutable prefix reuse.} Committed dLLM KV is content-addressable and exact, so
+  multi-turn and agentic sessions reuse multi-million-token prefixes across requests and nodes.
+  \item \textbf{Heterogeneous-generation disaggregation.} Compute-bound prefill runs on MI355X; decode
+  and KV capacity use MI300X nodes on the same backend fabric, with KV moved through UMBP/MoRI-IO
+  (FP8 KV converted between OCP and FNUZ formats).
+\end{enumerate}
+
+\subsection{TPF-Aware Scheduling}
+\label{sec:design-sched}
+When the KV-read term of Eq.~\ref{eq:step} dominates, committing more tokens per step pays off.
+\sys selects block size and confidence threshold per request from its context length and SLO, on top
+of SGLang's first-done-first-out batching, and exposes the quality/throughput trade-off explicitly.
+\todo{Policy definition and quality guardrail.}

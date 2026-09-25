@@ -1,0 +1,67 @@
+\section{Characterizing Long-Context dLLM Inference}
+\label{sec:char}
+
+\subsection{A Per-Step Cost Model}
+With a prefix KV cache, one denoising step processes a block of $B$ query tokens against a context of
+$L$ tokens on $G$ GPUs. For MoE models we model the step time as
+\begin{equation}
+\begin{split}
+T_{\text{step}} \approx\;&
+\underbrace{\frac{S_{\text{KV}}(L)}{G\cdot BW_{\text{HBM}}}}_{\text{KV read}} +
+\underbrace{T_{\text{exp}}(B)}_{\text{expert weights}} +
+\underbrace{T_{\text{EP}}(B)}_{\text{dispatch/combine}} \\
+&+ \underbrace{T_{\text{CP}}(B, G)}_{\text{attention merge}} + T_{\text{samp}},
+\end{split}
+\label{eq:step}
+\end{equation}
+where $S_{\text{KV}}(L) = 2\,n_{\text{layers}}\,n_{\text{kv}}\,d_{\text{head}}\,b\,L$ bytes. The
+decode throughput of one request is $\TPF / T_{\text{step}}$. An AR model pays a comparable
+$T_{\text{step}}$ per \emph{single} token, so when the KV-read term dominates, the dLLM advantage
+approaches \TPF. Prefill costs $\Theta(L^2)$ attention FLOPs; fully bidirectional prompts cannot use
+the causal $2\times$ saving that block-causal prompts retain.
+
+\begin{table}[t]
+\caption{KV-cache footprint from model configurations (BF16). Block-diffusion LLaDA2.x models and
+their AR counterparts (Ling 2.0) share identical shapes.}
+\label{tab:kv}
+\centering\small
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrrr}
+\toprule
+Model & KV heads & KiB/token & GB @ 2M \\
+\midrule
+LLaDA2.2-mini / Ling-mini-2.0 (16B, 1.4B act.) & 4 & 40 & 82 \\
+LLaDA2.2-flash / Ling-flash-2.0 (103B, 6.1B act.) & 4 & 64 & 131 \\
+SDAR-30B-A3B & 4 & 96 & 197 \\
+Qwen2.5-7B-Instruct-1M (AR) & 4 & 56 & 115 \\
+LLaDA-MoE-7B (bidirectional) & 16 & 128 & 262 \\
+LLaDA-8B (bidirectional) & 32 & 512 & 1{,}049 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\subsection{Where the Time Goes}
+\placeholderfig{fig:breakdown}{Step-time breakdown versus context length (4K--2M) for LLaDA2.2-mini
+and LLaDA2.2-flash on 8 MI355X GPUs.}{F1: stacked bars per context length: KV read, expert weights,
+EP dispatch/combine, CP merge, sampling. Measured with the profiling pipeline of
+\S\ref{sec:impl-prof}.}
+
+\todo{Describe F1 once measured.} Our analytical estimate for LLaDA2.2-flash at 2M tokens on one node
+(batch 1) is \est{$\approx$7.5\,ms} per step, split roughly evenly between KV reads, expert-weight
+reads and EP communication, which motivates attacking all three.
+
+\subsection{Diffusion versus Autoregressive at Equal Architecture}
+\placeholderfig{fig:arvsdllm}{Decode throughput versus context length: LLaDA2.2 versus Ling 2.0
+(identical architecture), and Qwen2.5-1M.}{F2: tokens/s per request (log scale) vs context 32K--2M.
+Expect a crossover where the dLLM advantage grows toward \TPF.}
+
+\hyp{The dLLM advantage grows with context and approaches the measured \TPF (2--5).}
+
+\subsection{Gaps in Existing Serving Systems}
+\label{sec:char-gaps}
+SGLang serves LLaDA2.x, SDAR and DiffusionGemma, but its dLLM path currently disables
+prefill/decode disaggregation, the hierarchical KV cache (and therefore storage backends such as
+UMBP), pipeline parallelism, and, on AMD GPUs, graph capture~\cite{sglangdllm}. Context parallelism
+is not disabled but is untested with dLLMs. vLLM serves DiffusionGemma natively and LLaDA2 only via
+an experimental single-request plugin~\cite{diffusiongemma}. dInfer~\cite{ma2025dinfer} and
+DiLaServe~\cite{chang2026dilaserve} target a single node or tensor parallelism only.

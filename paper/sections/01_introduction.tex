@@ -1,0 +1,53 @@
+\section{Introduction}
+\label{sec:intro}
+
+% Paragraph 1: long-context inference matters and is memory-bound.
+Agentic workloads, repository-scale code assistants and long multi-turn sessions are pushing LLM
+contexts toward millions of tokens~\cite{yang2025qwen25_1m,yang2024contextparallel}. At this scale,
+autoregressive (AR) decoding is dominated by reading the key--value (KV) cache: every generated token
+streams the entire cache from HBM, and prefill cost grows quadratically with context length.
+
+% Paragraph 2: dLLMs are a different decoding regime.
+Diffusion LLMs (dLLMs) generate text by iteratively denoising a block of masked
+tokens~\cite{nie2025llada,arriola2025blockdiffusion}. Recent models scale to 100B-parameter
+mixture-of-experts (MoE) architectures~\cite{bie2025llada2,bie2026llada21,llada22} and, with KV caching
+and confidence-based parallel decoding, match or exceed AR throughput at short
+contexts~\cite{wu2025fastdllm,wu2025fastdllmv2,ma2025dinfer}. Yet dLLM inference systems remain
+single-node, and serving engines explicitly disable disaggregation, hierarchical caching and pipeline
+parallelism for dLLMs~\cite{sglangdllm}. No prior work runs dLLMs beyond 256K tokens.
+
+% Paragraph 3: the key observation.
+We observe that three properties of diffusion decoding change the design space for long-context,
+multi-node inference:
+\begin{itemize}
+  \item \textbf{Multi-token commits per KV pass.} A denoising step reads the KV cache once and commits
+  \TPF (tokens per forward) tokens, amortizing the dominant long-context cost \TPF-fold.
+  \item \textbf{Immutable prefix KV.} In block-diffusion models, committed blocks never change, so
+  their KV can be streamed, sharded, pooled and reused exactly.
+  \item \textbf{Step-to-step stability.} Attention saliency~\cite{song2025sparsedllm} and
+  \hyp{expert routing of committed tokens} change little across steps.
+\end{itemize}
+
+% Paragraph 4: the system.
+We build \sys on SGLang~\cite{zheng2023sglang} and MoRI~\cite{mori} and make the following
+contributions:
+\begin{enumerate}
+  \item \textbf{Characterization and cost model} of dLLM inference from 4K to multi-million-token
+  contexts on up to 64 GPUs, including a controlled AR-versus-diffusion comparison on
+  architecturally identical models (\S\ref{sec:char}).
+  \item \textbf{Denoise-step context parallelism}: sequence-sharded KV with a GPU-initiated
+  partial-attention merge, and two-level ring prefill (\S\ref{sec:design-cp}).
+  \item \textbf{Shard-aligned, commit-driven KV streaming} for prefill/decode disaggregation of dLLMs
+  over MoRI-IO and GPU-initiated RDMA (\S\ref{sec:design-pd}).
+  \item \textbf{Step-aware expert parallelism} that reuses routing across denoising steps
+  (\S\ref{sec:design-ep}).
+  \item \textbf{A cluster-wide tiered KV pool} built on MoRI-UMBP that extends contexts beyond
+  aggregate HBM and enables heterogeneous-generation disaggregation (\S\ref{sec:design-umbp}).
+  \item \textbf{A multi-node profiling methodology} that attributes every kernel, collective, RDMA
+  transfer and NIC event to a denoising step (\S\ref{sec:impl-prof}).
+\end{enumerate}
+
+% Paragraph 5: headline results (fill in).
+On 8 nodes of AMD Instinct MI355X with Pollara 400 AI NICs and 8 nodes of MI300X with ConnectX-7,
+\sys \todo{headline 1: max context and throughput}, \todo{headline 2: speedup over Ling-flash-2.0 at 1M
+tokens}, and \todo{headline 3: prefill scaling efficiency at 64 GPUs}.
